@@ -1,0 +1,55 @@
+#root {
+    height: 0;
+    width: 0;
+}
+
+.leaflet-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+#navigation {
+    display: grid;
+    background: white;
+    padding: .7em;
+    border-radius: 5px;
+    width: 22em;
+}
+
+#input-from, #input-to {
+    font-size: medium;
+}
+
+#go, #input-to, #button-group, #travel, #reset {
+    margin-top: .7em;
+}
+
+#go {
+    background: #4285f4;
+    color: white;
+}
+
+#reset {
+    background: #e6e6e6;
+    color: black;
+}
+
+#nav-settings, #nav-metric-radios {
+    display: flex;
+}
+
+#nav-metric-radios {
+    margin: 0;
+    position: relative;
+    top: 60%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+#travel {
+    text-align: center;
+}
