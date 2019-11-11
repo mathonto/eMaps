@@ -10,13 +10,12 @@ pub mod highway;
 pub mod options;
 
 pub fn is_oneway(way: &Way) -> bool {
-    let tag = way.tags.iter()
-        .find(|(k, _)| *k == "oneway");
+    let tag = way.tags.get("oneway");
     // not oneway assumed if not specified
     if tag.is_none() {
         return false;
     }
-    tag.unwrap().1 == "yes"
+    tag.unwrap() == "yes"
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

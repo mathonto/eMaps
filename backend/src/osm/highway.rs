@@ -36,8 +36,7 @@ pub enum Highway {
 
 impl Highway {
     pub fn from(way: &Way) -> Option<Self> {
-        let (_, tag) = way.tags.iter()
-            .find(|(k, _)| *k == "highway")?;
+        let tag = way.tags.get("highway")?;
         Self::from_str(tag).ok()
     }
 
@@ -74,8 +73,7 @@ impl Kmh {
     }
 
     pub fn from(way: &Way) -> Option<Self> {
-        let (_, tag) = way.tags.iter()
-            .find(|(k, _)| *k == "maxspeed")?;
+        let tag = way.tags.get("maxspeed")?;
 
         if let Ok(speed) = tag.parse::<u32>() {
             Some(Self::new(speed))
