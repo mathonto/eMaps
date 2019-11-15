@@ -1,0 +1,8 @@
+services:
+  - docker
+
+notifications:
+  email: false
+
+script:
+  - docker build -t maps .

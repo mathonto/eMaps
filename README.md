@@ -12,7 +12,7 @@
 ## Compile
 
 ### Ubuntu 19.10
-Run the bash script in the project root via `./build.sh`. 
+Run the bash script in the project root via `sudo ./build.sh`.
 This also installs the necessary dependencies.
 
 ### Other

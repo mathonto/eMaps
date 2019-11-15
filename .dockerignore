@@ -1,0 +1,9 @@
+*.bin
+*.pbf
+
+backend/target
+backend/*.bin
+backend/*.pbf
+
+frontend/build
+frontend/node_modules
