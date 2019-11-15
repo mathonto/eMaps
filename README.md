@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="img/example.png"></img>
+</p>
+
 # Maps
 
 ## Dependencies
