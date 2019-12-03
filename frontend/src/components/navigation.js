@@ -247,6 +247,8 @@ export default class Navigation extends React.Component {
 
         if (e.target.value === '' || re.test(e.target.value)) {
             this.setState({range: e.target.value})
+        } else {
+            toast.error('Please enter a number');
         }
     }
 }
