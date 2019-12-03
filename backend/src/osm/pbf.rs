@@ -6,7 +6,7 @@ use osmpbfreader::{NodeId, OsmObj, OsmPbfReader};
 use stable_vec::StableVec;
 
 use crate::graph::{Edge, Graph, Node};
-use crate::osm::{Coordinates, is_oneway};
+use crate::osm::{Amenity, Coordinates, is_oneway};
 use crate::osm::highway::{Highway, Kmh};
 use crate::osm::options::Transport;
 
@@ -94,9 +94,34 @@ impl<'a> Pbf<'a> {
                         osm_node.decimicro_lat,
                         osm_node.decimicro_lon,
                     );
+                    let tags = osm_node.tags;
+                    let mut vehicle_vec = Vec::new();
 
-                    let node = Node::new(id.0, coordinates);
-                    nodes.insert(index, node);
+                    if tags.contains("amenity", "charging_station") {
+                        if tags.contains("bicycle", "yes") && tags.contains("car", "yes") {
+                            vehicle_vec.push("bicycle".to_string());
+                            vehicle_vec.push("car".to_string());
+                        } else if tags.contains("bicycle", "yes") {
+                            vehicle_vec.push("bicycle".to_string());
+                        } else if tags.contains("car", "yes") {
+                            vehicle_vec.push("car".to_string());
+                        } else {
+                            // if nothing specified, assume both are allowed
+                            vehicle_vec.push("bicycle".to_string());
+                            vehicle_vec.push("car".to_string());
+                        }
+                        let amenity = Amenity::new(
+                            "charging_station".to_string(),
+                            vehicle_vec,
+                        );
+                        let node = Node::new(id.0, coordinates, Option::from(amenity));
+
+                        nodes.insert(index, node);
+                    } else {
+                        let node = Node::new(id.0, coordinates, None);
+
+                        nodes.insert(index, node);
+                    }
                 }
             }
         }

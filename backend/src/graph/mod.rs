@@ -7,7 +7,7 @@ use log::debug;
 use serde::{Deserialize, Serialize};
 use stable_vec::StableVec;
 
-use crate::osm::Coordinates;
+use crate::osm::{Amenity, Coordinates};
 use crate::osm::highway::Kmh;
 use crate::osm::options::{Routing, Transport};
 use crate::osm::options::Routing::Time;
@@ -83,13 +83,15 @@ impl Graph {
 pub struct Node {
     pub id: i64,
     pub coordinates: Coordinates,
+    pub amenity: Option<Amenity>,
 }
 
 impl Node {
-    pub fn new(id: i64, coordinates: Coordinates) -> Self {
+    pub fn new(id: i64, coordinates: Coordinates, amenity: Option<Amenity>) -> Self {
         Self {
             id,
             coordinates,
+            amenity,
         }
     }
 }
