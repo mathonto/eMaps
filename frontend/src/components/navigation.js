@@ -30,7 +30,8 @@ export default class Navigation extends React.Component {
             transport: "car",
             routing: "time",
             value: '',
-            suggestions: []
+            suggestions: [],
+            range: ''
         };
     }
 
@@ -151,6 +152,13 @@ export default class Navigation extends React.Component {
                         </div>
                     </RadioGroup>
                 </div>
+                <div style={{width: 300}}>
+                    <Input id='input-range'
+                           placeholder='Current range...'
+                           value={this.state.range}
+                           onChange={this.rangeChange}
+                    />
+                </div>
                 <div>
                     <ButtonGroup fullWidth aria-label="split button">
                         <Button
@@ -233,4 +241,12 @@ export default class Navigation extends React.Component {
             routing: event.target.value
         });
     };
+
+    rangeChange = (e) => {
+        const re = /^[0-9\b]+$/;
+
+        if (e.target.value === '' || re.test(e.target.value)) {
+            this.setState({range: e.target.value})
+        }
+    }
 }
