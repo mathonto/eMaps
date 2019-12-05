@@ -204,7 +204,8 @@ export default class Navigation extends React.Component {
                 lon: this.props.state.to.coordinates[1],
             },
             transport: this.state.transport,
-            routing: this.state.routing
+            routing: this.state.routing,
+            range: this.state.range
         };
 
         axios.post(BASE_URL + '/shortest-path', data).then(response => {
