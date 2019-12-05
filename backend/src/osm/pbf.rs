@@ -46,6 +46,7 @@ impl<'a> Pbf<'a> {
                 if highway.is_none() {
                     continue;
                 }
+
                 let transport = Transport::from(highway.unwrap());
                 let max_speed = Kmh::from(&way)
                     .or_else(|| highway.unwrap().default_speed()).unwrap();
@@ -84,7 +85,7 @@ impl<'a> Pbf<'a> {
         let mut pbf = read_pbf(self.filename);
         let mut nodes =
             StableVec::with_capacity(self.node_indices.len());
-
+        let mut charging_station_count = 0;
         for object in pbf.par_iter() {
             if let OsmObj::Node(osm_node) = object.unwrap() {
                 let id = osm_node.id;
@@ -94,28 +95,29 @@ impl<'a> Pbf<'a> {
                         osm_node.decimicro_lat,
                         osm_node.decimicro_lon,
                     );
+
                     let tags = osm_node.tags;
 
                     if tags.contains("amenity", "charging_station") {
                         if tags.contains("bicycle", "yes") && tags.contains("car", "yes") {
                             let charging = Charging::CarBike;
                             let node = Node::new(id.0, coordinates, Option::from(charging));
-
+                            charging_station_count += 1;
                             nodes.insert(index, node);
                         } else if tags.contains("bicycle", "yes") {
                             let charging = Charging::Bike;
                             let node = Node::new(id.0, coordinates, Option::from(charging));
-
+                            charging_station_count += 1;
                             nodes.insert(index, node);
                         } else if tags.contains("car", "yes") {
                             let charging = Charging::Car;
                             let node = Node::new(id.0, coordinates, Option::from(charging));
-
+                            charging_station_count += 1;
                             nodes.insert(index, node);
                         } else {
                             let charging = Charging::CarBike;
                             let node = Node::new(id.0, coordinates, Option::from(charging));
-
+                            charging_station_count += 1;
                             nodes.insert(index, node);
                         }
                     } else {
@@ -126,6 +128,7 @@ impl<'a> Pbf<'a> {
                 }
             }
         }
+        debug!("Found {} charging stations", charging_station_count);
         nodes
     }
 
