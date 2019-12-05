@@ -60,11 +60,14 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
         Transport::from_str(&request.transport).unwrap(),
         Routing::from_str(&request.routing).unwrap(),
     );
+    let range_in_meters = &request.range.parse::<u64>().unwrap() * 1000;
     debug!("Calculating path...");
+    debug!("Input range of e-vehicle is {}meters", &range_in_meters);
     let now = Instant::now();
     let route = router.shortest_path(
         &request.start.coordinates(),
         &request.goal.coordinates(),
+        &range_in_meters
     );
 
     match route {
@@ -85,6 +88,8 @@ struct Request {
     goal: FloatCoordinates,
     transport: String,
     routing: String,
+    range: String
+
 }
 
 #[derive(Debug, Serialize, Deserialize)]
