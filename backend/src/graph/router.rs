@@ -7,7 +7,7 @@ use log::debug;
 
 use crate::graph::{Edge, Graph};
 use crate::osm::Coordinates;
-use crate::osm::options::{Routing, Transport};
+use crate::osm::options::{Routing, Transport, Charging};
 use crate::osm::options::Routing::Time;
 use crate::osm::options::Transport::Car;
 
@@ -48,7 +48,7 @@ impl<'a> Router<'a> {
         while let Some(node) = self.queue.pop() {
             let id = self.graph.node(node.index).id;
             if id == goal_id {
-                let route = self.backtrack_path(start_index, node.index, current_range_in_meters);
+                let route = self.backtrack_path(start_index, node.index, current_range_in_meters, max_range_in_meters);
                 debug!("Distance of calculated route is {}.", &route.distance);
                 return Ok(route);
             }
@@ -76,26 +76,36 @@ impl<'a> Router<'a> {
     }
 
     pub fn nearest_charging_station(&self, coords: &Coordinates) {
+        let required_charging = Charging::from(self.mode);
         debug!("Current coordinate {:?}", &coords);
         for node in &self.graph.nodes {
-            if node.amenity.is_some() {
-                debug!("Node has amenity {:?}", &node.amenity);
+            if node.charging.is_some() {
+                let charging = node.charging.unwrap();
+                if charging.contains(required_charging) {
+                    debug!("FOUND CHARGING STATION");
+                }
             }
         }
     }
 
-    fn backtrack_path(&self, start_index: usize, goal_index: usize, current_range_in_meters: u32) -> Route {
+    fn backtrack_path(&self, start_index: usize, goal_index: usize, mut current_range_in_meters: u32, max_range_in_meters: u32) -> Route {
         let mut path = Vec::new();
         let mut time = 0;
         let mut distance = 0;
+        let mut temp_distance = 0;
         let mut edge = self.prev[goal_index];
 
         loop {
             distance += edge.distance;
+            temp_distance += edge.distance;
             time += edge.time(self.mode);
 
-            if distance > current_range_in_meters {
+            if temp_distance > current_range_in_meters {
                 self.nearest_charging_station(&self.graph.coordinates(edge.target_index).clone());
+                // reset distance
+                temp_distance = 0;
+                // we recharged
+                current_range_in_meters = max_range_in_meters;
             }
             // TODO: add nearest charging station to path! EZ PEZ
             path.push(self.graph.coordinates(edge.target_index).clone());

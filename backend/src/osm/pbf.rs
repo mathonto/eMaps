@@ -6,9 +6,9 @@ use osmpbfreader::{NodeId, OsmObj, OsmPbfReader};
 use stable_vec::StableVec;
 
 use crate::graph::{Edge, Graph, Node};
-use crate::osm::{Amenity, Coordinates, is_oneway};
+use crate::osm::{Coordinates, is_oneway};
 use crate::osm::highway::{Highway, Kmh};
-use crate::osm::options::Transport;
+use crate::osm::options::{Transport, Charging};
 
 pub struct Pbf<'a> {
     filename: &'a str,
@@ -95,28 +95,29 @@ impl<'a> Pbf<'a> {
                         osm_node.decimicro_lon,
                     );
                     let tags = osm_node.tags;
-                    let mut vehicle_vec = Vec::new();
 
                     if tags.contains("amenity", "charging_station") {
                         if tags.contains("bicycle", "yes") && tags.contains("car", "yes") {
-                            vehicle_vec.push("bicycle".to_string());
-                            vehicle_vec.push("car".to_string());
-                        } else if tags.contains("bicycle", "yes") {
-                            vehicle_vec.push("bicycle".to_string());
-                        } else if tags.contains("car", "yes") {
-                            vehicle_vec.push("car".to_string());
-                        } else {
-                            // if nothing specified, assume both are allowed
-                            vehicle_vec.push("bicycle".to_string());
-                            vehicle_vec.push("car".to_string());
-                        }
-                        let amenity = Amenity::new(
-                            "charging_station".to_string(),
-                            vehicle_vec,
-                        );
-                        let node = Node::new(id.0, coordinates, Option::from(amenity));
+                            let charging = Charging::CarBike;
+                            let node = Node::new(id.0, coordinates, Option::from(charging));
 
-                        nodes.insert(index, node);
+                            nodes.insert(index, node);
+                        } else if tags.contains("bicycle", "yes") {
+                            let charging = Charging::Bike;
+                            let node = Node::new(id.0, coordinates, Option::from(charging));
+
+                            nodes.insert(index, node);
+                        } else if tags.contains("car", "yes") {
+                            let charging = Charging::Car;
+                            let node = Node::new(id.0, coordinates, Option::from(charging));
+
+                            nodes.insert(index, node);
+                        } else {
+                            let charging = Charging::CarBike;
+                            let node = Node::new(id.0, coordinates, Option::from(charging));
+
+                            nodes.insert(index, node);
+                        }
                     } else {
                         let node = Node::new(id.0, coordinates, None);
 

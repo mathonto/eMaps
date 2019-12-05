@@ -83,18 +83,3 @@ impl Hash for Coordinates {
         self.lon_rounded().hash(state);
     }
 }
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Amenity {
-    tag: String,
-    vehicle: Vec<String>,
-}
-
-impl Amenity {
-    pub fn new(tag: String, vehicle: Vec<String>) -> Self {
-        Self {
-            tag,
-            vehicle,
-        }
-    }
-}

@@ -7,9 +7,9 @@ use log::debug;
 use serde::{Deserialize, Serialize};
 use stable_vec::StableVec;
 
-use crate::osm::{Amenity, Coordinates};
+use crate::osm::{Coordinates};
 use crate::osm::highway::Kmh;
-use crate::osm::options::{Routing, Transport};
+use crate::osm::options::{Routing, Transport, Charging};
 use crate::osm::options::Routing::Time;
 use crate::osm::options::Transport::{Bike, Car, Walk};
 use crate::osm::pbf::Pbf;
@@ -83,15 +83,15 @@ impl Graph {
 pub struct Node {
     pub id: i64,
     pub coordinates: Coordinates,
-    pub amenity: Option<Amenity>,
+    pub charging: Option<Charging>,
 }
 
 impl Node {
-    pub fn new(id: i64, coordinates: Coordinates, amenity: Option<Amenity>) -> Self {
+    pub fn new(id: i64, coordinates: Coordinates, charging: Option<Charging>) -> Self {
         Self {
             id,
             coordinates,
-            amenity,
+            charging,
         }
     }
 }
