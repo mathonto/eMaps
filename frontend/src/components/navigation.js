@@ -155,12 +155,12 @@ export default class Navigation extends React.Component {
                 </div>
                 <div style={{width: 300}}>
                     <Input id='input-current-range'
-                           placeholder='Current range...'
+                           placeholder='Current range (km)...'
                            value={this.state.current_range}
                            onChange={this.currentRangeChange}
                     />
                     <Input id='input-max-range'
-                           placeholder='Max. range...'
+                           placeholder='Max. range (km)...'
                            value={this.state.max_range}
                            onChange={this.maxRangeChange}
                     />

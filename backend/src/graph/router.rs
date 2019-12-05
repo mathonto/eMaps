@@ -34,8 +34,7 @@ impl<'a> Router<'a> {
         }
     }
 
-    pub fn shortest_path(&mut self, start: &Coordinates, goal: &Coordinates, current_range_in_meters: &u64, max_range_in_meters: &u64) -> Result<Route, &str> {
-        self.nearest_charging_station();
+    pub fn shortest_path(&mut self, start: &Coordinates, goal: &Coordinates, current_range_in_meters: u32, max_range_in_meters: u32) -> Result<Route, &str> {
         let start_index = self.graph.nearest_neighbor(start, self.mode)?;
         let start_id = self.graph.node(start_index).id;
         let goal_index = self.graph.nearest_neighbor(goal, self.mode)?;
@@ -49,7 +48,7 @@ impl<'a> Router<'a> {
         while let Some(node) = self.queue.pop() {
             let id = self.graph.node(node.index).id;
             if id == goal_id {
-                let route = self.backtrack_path(start_index, node.index);
+                let route = self.backtrack_path(start_index, node.index, current_range_in_meters);
                 debug!("Distance of calculated route is {}.", &route.distance);
                 return Ok(route);
             }
@@ -76,7 +75,8 @@ impl<'a> Router<'a> {
         Err("No path found")
     }
 
-    pub fn nearest_charging_station(&self) {
+    pub fn nearest_charging_station(&self, coords: &Coordinates) {
+        debug!("Current coordinate {:?}", &coords);
         for node in &self.graph.nodes {
             if node.amenity.is_some() {
                 debug!("Node has amenity {:?}", &node.amenity);
@@ -84,7 +84,7 @@ impl<'a> Router<'a> {
         }
     }
 
-    fn backtrack_path(&self, start_index: usize, goal_index: usize) -> Route {
+    fn backtrack_path(&self, start_index: usize, goal_index: usize, current_range_in_meters: u32) -> Route {
         let mut path = Vec::new();
         let mut time = 0;
         let mut distance = 0;
@@ -93,6 +93,11 @@ impl<'a> Router<'a> {
         loop {
             distance += edge.distance;
             time += edge.time(self.mode);
+
+            if distance > current_range_in_meters {
+                self.nearest_charging_station(&self.graph.coordinates(edge.target_index).clone());
+            }
+            // TODO: add nearest charging station to path! EZ PEZ
             path.push(self.graph.coordinates(edge.target_index).clone());
 
             edge = self.prev[edge.source_index];
@@ -205,7 +210,7 @@ mod tests {
             Coordinates::from(Point::new(48.74465821861257, 9.107344150543215));
         let max_distance = start.distance(&goal) * 2;
 
-        let route = router.shortest_path(&start, &goal, &300, &350);
+        let route = router.shortest_path(&start, &goal, 300, 350);
         assert!(route.unwrap().distance < max_distance);
     }
 
@@ -216,7 +221,7 @@ mod tests {
         let stuttgart = Coordinates::from(Point::new(48.783418, 9.181945));
         let hamburg = Coordinates::from(Point::new(53.552483, 10.006797));
         let now = Instant::now();
-        let route = router.shortest_path(&stuttgart, &hamburg, &300, &500);
+        let route = router.shortest_path(&stuttgart, &hamburg, 300, 500);
         let secs = now.elapsed().as_secs();
         assert!(route.is_ok());
         assert!(secs < 10);

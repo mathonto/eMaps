@@ -60,8 +60,8 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
         Transport::from_str(&request.transport).unwrap(),
         Routing::from_str(&request.routing).unwrap(),
     );
-    let current_range_in_meters = &request.current_range.parse::<u64>().unwrap() * 1000;
-    let max_range_in_meters = &request.max_range.parse::<u64>().unwrap() * 1000;
+    let current_range_in_meters = &request.current_range.parse::<u32>().unwrap() * 1000;
+    let max_range_in_meters = &request.max_range.parse::<u32>().unwrap() * 1000;
     debug!("Calculating path...");
     debug!("Current range of e-vehicle is {}meters", &current_range_in_meters);
     debug!("Max. range of e-vehicle is {}meters", &max_range_in_meters);
@@ -69,8 +69,8 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
     let route = router.shortest_path(
         &request.start.coordinates(),
         &request.goal.coordinates(),
-        &current_range_in_meters,
-        &max_range_in_meters
+        current_range_in_meters,
+        max_range_in_meters
     );
 
     match route {
