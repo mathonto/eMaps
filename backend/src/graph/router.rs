@@ -75,17 +75,26 @@ impl<'a> Router<'a> {
         Err("No path found")
     }
 
-    pub fn nearest_charging_station(&self, coords: &Coordinates) {
+    pub fn nearest_charging_station(&self, coords: &Coordinates) -> Coordinates {
+        let mut dist = u32::max_value();
+        let mut temp_dist = 0;
+        let mut chosen_coords = coords;
         let required_charging = Charging::from(self.mode);
         debug!("Current coordinate {:?}", &coords);
         for node in &self.graph.nodes {
             if node.charging.is_some() {
                 let charging = node.charging.unwrap();
                 if charging.contains(required_charging) {
+                    temp_dist = coords.distance(&node.coordinates);
+                    if temp_dist < dist {
+                        chosen_coords = &node.coordinates;
+                        dist = temp_dist
+                    }
                     debug!("FOUND CHARGING STATION");
                 }
             }
         }
+        chosen_coords.clone()
     }
 
     fn backtrack_path(&self, start_index: usize, goal_index: usize, mut current_range_in_meters: u32, max_range_in_meters: u32) -> Route {
@@ -101,7 +110,7 @@ impl<'a> Router<'a> {
             time += edge.time(self.mode);
 
             if temp_distance > current_range_in_meters {
-                self.nearest_charging_station(&self.graph.coordinates(edge.target_index).clone());
+                let coords = self.nearest_charging_station(&self.graph.coordinates(edge.target_index).clone());
                 // reset distance
                 temp_distance = 0;
                 // we recharged
