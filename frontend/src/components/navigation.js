@@ -31,7 +31,8 @@ export default class Navigation extends React.Component {
             routing: "time",
             value: '',
             suggestions: [],
-            range: ''
+            current_range: '',
+            max_range: ''
         };
     }
 
@@ -153,10 +154,15 @@ export default class Navigation extends React.Component {
                     </RadioGroup>
                 </div>
                 <div style={{width: 300}}>
-                    <Input id='input-range'
+                    <Input id='input-current-range'
                            placeholder='Current range...'
-                           value={this.state.range}
-                           onChange={this.rangeChange}
+                           value={this.state.current_range}
+                           onChange={this.currentRangeChange}
+                    />
+                    <Input id='input-max-range'
+                           placeholder='Max. range...'
+                           value={this.state.max_range}
+                           onChange={this.maxRangeChange}
                     />
                 </div>
                 <div>
@@ -190,8 +196,12 @@ export default class Navigation extends React.Component {
     };
 
     go = () => {
-        if (!this.props.state.from.coordinates || !this.props.state.to.coordinates) {
-            toast.error('Please select start and goal');
+        if (!this.props.state.from.coordinates || !this.props.state.to.coordinates
+            || !this.state.current_range || !this.state.max_range) {
+            toast.error('Please select start, goal, current and max. range');
+            return;
+        } else if (Number(this.state.current_range) > Number(this.state.max_range)) {
+            toast.error('Current range cannot be bigger than max. range');
             return;
         }
         const data = {
@@ -205,7 +215,8 @@ export default class Navigation extends React.Component {
             },
             transport: this.state.transport,
             routing: this.state.routing,
-            range: this.state.range
+            current_range: this.state.current_range,
+            max_range: this.state.max_range
         };
 
         axios.post(BASE_URL + '/shortest-path', data).then(response => {
@@ -243,11 +254,25 @@ export default class Navigation extends React.Component {
         });
     };
 
-    rangeChange = (e) => {
+    currentRangeChange = (e) => {
+        const re = /^[0-9\b]+$/;
+
+        if (this.state.max_range.length > 0 && Number(e.target.value) > Number(this.state.max_range)) {
+            toast.error('Current range cannot be bigger than maximum range');
+        } else {
+            if (e.target.value === '' || re.test(e.target.value)) {
+                this.setState({current_range: e.target.value})
+            } else {
+                toast.error('Please enter a number');
+            }
+        }
+    }
+
+    maxRangeChange = (e) => {
         const re = /^[0-9\b]+$/;
 
         if (e.target.value === '' || re.test(e.target.value)) {
-            this.setState({range: e.target.value})
+            this.setState({max_range: e.target.value})
         } else {
             toast.error('Please enter a number');
         }
