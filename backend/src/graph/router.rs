@@ -108,13 +108,14 @@ impl<'a> Router<'a> {
             time += edge.time(self.mode);
 
             if temp_distance > current_range_in_meters {
-                let coords = self.nearest_charging_station(&self.graph.coordinates(edge.target_index).clone());
+                let charging_station_coords = self.nearest_charging_station(&self.graph.coordinates(edge.target_index).clone());
+                let closest_to_charging_index = self.graph.nearest_neighbor(&charging_station_coords, self.mode);
                 // reset distance
                 temp_distance = 0;
                 // we recharged
                 current_range_in_meters = max_range_in_meters;
+                // TODO: find path from current node to nearest charging station, and find path from charging station to goal
             }
-            // TODO: add nearest charging station to path! EZ PEZ
             path.push(self.graph.coordinates(edge.target_index).clone());
 
             edge = self.prev[edge.source_index];
