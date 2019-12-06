@@ -36,7 +36,6 @@ impl<'a> Router<'a> {
 
     pub fn shortest_path(&mut self, start: &Coordinates, goal: &Coordinates, current_range_in_meters: u32, max_range_in_meters: u32) -> Result<Route, &str> {
         let start_index = self.graph.nearest_neighbor(start, self.mode)?;
-        let nodinhos = &self.graph.charging_nodes;
         let start_id = self.graph.node(start_index).id;
         let goal_index = self.graph.nearest_neighbor(goal, self.mode)?;
         let goal_id = self.graph.node(goal_index).id;
