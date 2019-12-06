@@ -8,7 +8,7 @@ use stable_vec::StableVec;
 use crate::graph::{Edge, Graph, Node, ChargingNode};
 use crate::osm::{Coordinates, is_oneway};
 use crate::osm::highway::{Highway, Kmh};
-use crate::osm::options::Transport;
+use crate::osm::options::{Transport, ChargingOptions};
 
 pub struct Pbf<'a> {
     filename: &'a str,
@@ -50,13 +50,19 @@ impl<'a> Pbf<'a> {
                         osm_node.decimicro_lat,
                         osm_node.decimicro_lon,
                     );
-                    let charging_node = ChargingNode::new(id.0, coordinates, osm_node.tags);
+                    let mut charging_options = ChargingOptions::CarBike;
+                    if osm_node.tags.contains("car", "yes") && osm_node.tags.contains("bicycle", "yes") {
+                        charging_options = ChargingOptions::CarBike;
+                    } else if osm_node.tags.contains("car", "yes") {
+                        charging_options = ChargingOptions::Car;
+                    } else if osm_node.tags.contains("bicycle", "yes") {
+                        charging_options = ChargingOptions::Bike;
+                    }
+                    let charging_node = ChargingNode::new(id.0, coordinates, charging_options);
                     charging_nodes.push(charging_node);
                 }
             }
         }
-        debug!("FOUND {} NODE CS", charging_nodes.len());
-        ;
         charging_nodes
     }
 

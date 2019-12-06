@@ -82,19 +82,16 @@ impl<'a> Router<'a> {
         let required_charging = ChargingOptions::from(self.mode);
         debug!("Current coordinate {:?}", &coords);
         // TODO: extend graph with charging node set, then search nearest neighbor for node if no way available
-        /*for node in &self.graph.nodes {
-            if node.charging.is_some() {
-                let charging = node.charging.unwrap();
-                if charging.contains(required_charging) {
-                    temp_dist = coords.distance(&node.coordinates);
-                    if temp_dist < dist {
-                        chosen_coords = &node.coordinates;
-                        dist = temp_dist
-                    }
-                    debug!("FOUND CHARGING STATION");
+        for charging_node in &self.graph.charging_nodes {
+            if charging_node.charging_options.contains(required_charging) {
+                temp_dist = coords.distance(&charging_node.coordinates);
+                if temp_dist < dist {
+                    chosen_coords = &charging_node.coordinates;
+                    dist = temp_dist
                 }
             }
-        }*/
+        }
+        debug!("Found charging station with coordinates {:?}", &chosen_coords);
         chosen_coords.clone()
     }
 
@@ -110,14 +107,13 @@ impl<'a> Router<'a> {
             temp_distance += edge.distance;
             time += edge.time(self.mode);
 
-            /*
             if temp_distance > current_range_in_meters {
                 let coords = self.nearest_charging_station(&self.graph.coordinates(edge.target_index).clone());
                 // reset distance
                 temp_distance = 0;
                 // we recharged
                 current_range_in_meters = max_range_in_meters;
-            }*/
+            }
             // TODO: add nearest charging station to path! EZ PEZ
             path.push(self.graph.coordinates(edge.target_index).clone());
 

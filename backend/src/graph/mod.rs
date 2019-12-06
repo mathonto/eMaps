@@ -8,12 +8,11 @@ use serde::{Deserialize, Serialize};
 use stable_vec::StableVec;
 
 use crate::osm::highway::Kmh;
-use crate::osm::options::{Routing, Transport};
+use crate::osm::options::{Routing, Transport, ChargingOptions};
 use crate::osm::options::Routing::Time;
 use crate::osm::options::Transport::{Bike, Car, Walk};
 use crate::osm::pbf::Pbf;
 use crate::osm::Coordinates;
-use osmpbfreader::{Tags};
 
 pub mod router;
 mod grid;
@@ -101,15 +100,15 @@ impl Node {
 pub struct ChargingNode {
     pub id: i64,
     pub coordinates: Coordinates,
-    pub tags: Tags,
+    pub charging_options: ChargingOptions,
 }
 
 impl ChargingNode {
-    pub fn new(id: i64, coordinates: Coordinates, tags: Tags) -> Self {
+    pub fn new(id: i64, coordinates: Coordinates, charging_options: ChargingOptions) -> Self {
         Self {
             id,
             coordinates,
-            tags,
+            charging_options,
         }
     }
 }
