@@ -5,10 +5,10 @@ use log::debug;
 use osmpbfreader::{NodeId, OsmObj, OsmPbfReader};
 use stable_vec::StableVec;
 
-use crate::graph::{Edge, Graph, Node};
+use crate::graph::{Edge, Graph, Node, ChargingNode};
 use crate::osm::{Coordinates, is_oneway};
 use crate::osm::highway::{Highway, Kmh};
-use crate::osm::options::{Transport, Charging};
+use crate::osm::options::Transport;
 
 pub struct Pbf<'a> {
     filename: &'a str,
@@ -26,6 +26,9 @@ impl<'a> Pbf<'a> {
     }
 
     pub fn read(&mut self) -> Graph {
+        debug!("Parsing charging stations...");
+        let charging_stations = self.parse_charging_stations();
+        debug!("Parsed {} charging stations", charging_stations.len());
         debug!("Parsing edges...");
         let edges = self.parse_ways();
         debug!("Parsed {} edges", edges.len());
@@ -33,7 +36,28 @@ impl<'a> Pbf<'a> {
         let nodes = self.parse_nodes();
         debug!("Parsed {} nodes", nodes.capacity());
         debug!("Creating graph...");
-        self.create_graph(nodes, edges)
+        self.create_graph(nodes, edges, charging_stations)
+    }
+
+    fn parse_charging_stations(&mut self) -> Vec<ChargingNode> {
+        let mut pbf = read_pbf(self.filename);
+        let mut charging_nodes = Vec::new();
+        for object in pbf.par_iter() {
+            if let OsmObj::Node(osm_node) = object.unwrap() {
+                if osm_node.tags.contains("amenity", "charging_station") {
+                    let id = osm_node.id;
+                    let coordinates = Coordinates::new(
+                        osm_node.decimicro_lat,
+                        osm_node.decimicro_lon,
+                    );
+                    let charging_node = ChargingNode::new(id.0, coordinates, osm_node.tags);
+                    charging_nodes.push(charging_node);
+                }
+            }
+        }
+        debug!("FOUND {} NODE CS", charging_nodes.len());
+        ;
+        charging_nodes
     }
 
     fn parse_ways(&mut self) -> Vec<Edge> {
@@ -85,7 +109,6 @@ impl<'a> Pbf<'a> {
         let mut pbf = read_pbf(self.filename);
         let mut nodes =
             StableVec::with_capacity(self.node_indices.len());
-        let mut charging_station_count = 0;
         for object in pbf.par_iter() {
             if let OsmObj::Node(osm_node) = object.unwrap() {
                 let id = osm_node.id;
@@ -95,44 +118,16 @@ impl<'a> Pbf<'a> {
                         osm_node.decimicro_lat,
                         osm_node.decimicro_lon,
                     );
+                    let node = Node::new(id.0, coordinates);
 
-                    let tags = osm_node.tags;
-
-                    if tags.contains("amenity", "charging_station") {
-                        if tags.contains("bicycle", "yes") && tags.contains("car", "yes") {
-                            let charging = Charging::CarBike;
-                            let node = Node::new(id.0, coordinates, Option::from(charging));
-                            charging_station_count += 1;
-                            nodes.insert(index, node);
-                        } else if tags.contains("bicycle", "yes") {
-                            let charging = Charging::Bike;
-                            let node = Node::new(id.0, coordinates, Option::from(charging));
-                            charging_station_count += 1;
-                            nodes.insert(index, node);
-                        } else if tags.contains("car", "yes") {
-                            let charging = Charging::Car;
-                            let node = Node::new(id.0, coordinates, Option::from(charging));
-                            charging_station_count += 1;
-                            nodes.insert(index, node);
-                        } else {
-                            let charging = Charging::CarBike;
-                            let node = Node::new(id.0, coordinates, Option::from(charging));
-                            charging_station_count += 1;
-                            nodes.insert(index, node);
-                        }
-                    } else {
-                        let node = Node::new(id.0, coordinates, None);
-
-                        nodes.insert(index, node);
-                    }
+                    nodes.insert(index, node);
                 }
             }
         }
-        debug!("Found {} charging stations", charging_station_count);
         nodes
     }
 
-    fn create_graph(&self, nodes: StableVec<Node>, mut edges: Vec<Edge>) -> Graph {
+    fn create_graph(&self, nodes: StableVec<Node>, mut edges: Vec<Edge>, charging_nodes: Vec<ChargingNode>) -> Graph {
         let offsets_len = self.node_indices.len() + 1;
         let mut offsets = vec![0; offsets_len];
 
@@ -147,7 +142,7 @@ impl<'a> Pbf<'a> {
         for i in 1..offsets.len() {
             offsets[i] += offsets[i - 1]
         }
-        Graph::new(nodes, offsets, edges)
+        Graph::new(nodes, offsets, edges, charging_nodes)
     }
 
     fn insert_node_id(&mut self, id: NodeId) {

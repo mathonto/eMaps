@@ -22,26 +22,26 @@ pub enum Transport {
 
 #[derive(Debug, Eq, PartialEq, Clone, Copy, Serialize, Deserialize, EnumString)]
 #[strum(serialize_all = "snake_case")]
-pub enum Charging {
+pub enum ChargingOptions {
     Car,
     Bike,
     CarBike,
     None,
 }
 
-impl Charging {
+impl ChargingOptions {
     pub fn from(transport: Transport) -> Self {
         match transport {
-            Bike => Charging::Bike,
-            Car => Charging::Car,
-            CarBike => Charging::CarBike,
-            _ => Charging::None
+            Bike => ChargingOptions::Bike,
+            Car => ChargingOptions::Car,
+            CarBike => ChargingOptions::CarBike,
+            _ => ChargingOptions::None
         }
     }
 
     pub fn contains(self, other: Self) -> bool {
-        self == Charging::CarBike || self == other
-            || self == Charging::CarBike && (other == Charging::Car || other == Charging::Bike)
+        self == ChargingOptions::CarBike || self == other
+            || self == ChargingOptions::CarBike && (other == ChargingOptions::Car || other == ChargingOptions::Bike)
     }
 }
 

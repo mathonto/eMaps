@@ -7,12 +7,13 @@ use log::debug;
 use serde::{Deserialize, Serialize};
 use stable_vec::StableVec;
 
-use crate::osm::{Coordinates};
 use crate::osm::highway::Kmh;
-use crate::osm::options::{Routing, Transport, Charging};
+use crate::osm::options::{Routing, Transport};
 use crate::osm::options::Routing::Time;
 use crate::osm::options::Transport::{Bike, Car, Walk};
 use crate::osm::pbf::Pbf;
+use crate::osm::Coordinates;
+use osmpbfreader::{Tags};
 
 pub mod router;
 mod grid;
@@ -25,10 +26,11 @@ pub struct Graph {
     offsets: Vec<usize>,
     edges: Vec<Edge>,
     cells: Cells,
+    charging_nodes: Vec<ChargingNode>,
 }
 
 impl Graph {
-    pub fn new(nodes: StableVec<Node>, offsets: Vec<usize>, edges: Vec<Edge>) -> Self {
+    pub fn new(nodes: StableVec<Node>, offsets: Vec<usize>, edges: Vec<Edge>, charging_nodes: Vec<ChargingNode>) -> Self {
         // StableVec does not implement Serialize
         let mut vec = Vec::with_capacity(nodes.capacity());
         for (_, node) in nodes {
@@ -40,6 +42,7 @@ impl Graph {
             edges,
             offsets,
             cells,
+            charging_nodes,
         }
     }
 
@@ -83,15 +86,30 @@ impl Graph {
 pub struct Node {
     pub id: i64,
     pub coordinates: Coordinates,
-    pub charging: Option<Charging>,
 }
 
 impl Node {
-    pub fn new(id: i64, coordinates: Coordinates, charging: Option<Charging>) -> Self {
+    pub fn new(id: i64, coordinates: Coordinates) -> Self {
         Self {
             id,
             coordinates,
-            charging,
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ChargingNode {
+    pub id: i64,
+    pub coordinates: Coordinates,
+    pub tags: Tags,
+}
+
+impl ChargingNode {
+    pub fn new(id: i64, coordinates: Coordinates, tags: Tags) -> Self {
+        Self {
+            id,
+            coordinates,
+            tags,
         }
     }
 }

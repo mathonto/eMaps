@@ -7,7 +7,7 @@ use log::debug;
 
 use crate::graph::{Edge, Graph};
 use crate::osm::Coordinates;
-use crate::osm::options::{Routing, Transport, Charging};
+use crate::osm::options::{Routing, Transport, ChargingOptions};
 use crate::osm::options::Routing::Time;
 use crate::osm::options::Transport::Car;
 
@@ -36,6 +36,7 @@ impl<'a> Router<'a> {
 
     pub fn shortest_path(&mut self, start: &Coordinates, goal: &Coordinates, current_range_in_meters: u32, max_range_in_meters: u32) -> Result<Route, &str> {
         let start_index = self.graph.nearest_neighbor(start, self.mode)?;
+        let nodinhos = &self.graph.charging_nodes;
         let start_id = self.graph.node(start_index).id;
         let goal_index = self.graph.nearest_neighbor(goal, self.mode)?;
         let goal_id = self.graph.node(goal_index).id;
@@ -79,9 +80,10 @@ impl<'a> Router<'a> {
         let mut dist = u32::max_value();
         let mut temp_dist = 0;
         let mut chosen_coords = coords;
-        let required_charging = Charging::from(self.mode);
+        let required_charging = ChargingOptions::from(self.mode);
         debug!("Current coordinate {:?}", &coords);
-        for node in &self.graph.nodes {
+        // TODO: extend graph with charging node set, then search nearest neighbor for node if no way available
+        /*for node in &self.graph.nodes {
             if node.charging.is_some() {
                 let charging = node.charging.unwrap();
                 if charging.contains(required_charging) {
@@ -93,7 +95,7 @@ impl<'a> Router<'a> {
                     debug!("FOUND CHARGING STATION");
                 }
             }
-        }
+        }*/
         chosen_coords.clone()
     }
 
@@ -109,13 +111,14 @@ impl<'a> Router<'a> {
             temp_distance += edge.distance;
             time += edge.time(self.mode);
 
+            /*
             if temp_distance > current_range_in_meters {
                 let coords = self.nearest_charging_station(&self.graph.coordinates(edge.target_index).clone());
                 // reset distance
                 temp_distance = 0;
                 // we recharged
                 current_range_in_meters = max_range_in_meters;
-            }
+            }*/
             // TODO: add nearest charging station to path! EZ PEZ
             path.push(self.graph.coordinates(edge.target_index).clone());
 
