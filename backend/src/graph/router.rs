@@ -34,7 +34,7 @@ impl<'a> Router<'a> {
         }
     }
 
-    pub fn shortest_path(&mut self, start: &Coordinates, goal: &Coordinates, current_range_in_meters: u32, max_range_in_meters: u32) -> Result<Route, &str> {
+    pub fn shortest_path(&mut self, start: &Coordinates, goal: &Coordinates) -> Result<Route, &str> {
         let start_index = self.graph.nearest_neighbor(start, self.mode)?;
         let start_id = self.graph.node(start_index).id;
         let goal_index = self.graph.nearest_neighbor(goal, self.mode)?;
@@ -48,7 +48,7 @@ impl<'a> Router<'a> {
         while let Some(node) = self.queue.pop() {
             let id = self.graph.node(node.index).id;
             if id == goal_id {
-                let route = self.backtrack_path(start_index, node.index, current_range_in_meters, max_range_in_meters);
+                let route = self.backtrack_path(start_index, node.index);
                 debug!("Distance of calculated route is {}.", &route.distance);
                 return Ok(route);
             }
@@ -75,16 +75,44 @@ impl<'a> Router<'a> {
         Err("No path found")
     }
 
+    pub fn calc_route_with_charging_station(&mut self, actual_start: &Coordinates, current_range: &u32) -> Result<Route, &str> {
+        let coords_of_chosen_charging =
+            self.get_optimal_charging_station_coords(actual_start, current_range.clone());
+        let nearest_neighbor = self.graph.nearest_neighbor(&coords_of_chosen_charging, self.mode)?;
+        let nearest_neighbor_coords = &self.graph.node(nearest_neighbor).coordinates;
+        let route = self.shortest_path(actual_start, nearest_neighbor_coords);
+        route
+    }
+
+    pub fn get_optimal_charging_station_coords(&self, start_coords: &Coordinates, current_range: u32) -> Coordinates {
+        let mut dist = current_range;
+        let mut charging_coords = start_coords;
+        let required_charging = ChargingOptions::from(self.mode);
+
+        for charging_node in &self.graph.charging_nodes {
+            if charging_node.charging_options.contains(required_charging) {
+                let temp_dist = start_coords.distance(&charging_node.coordinates);
+                // dist to charging needs to be smaller than current range
+                if temp_dist < current_range {
+                    if current_range - temp_dist > current_range - dist {
+                        dist = temp_dist;
+                        charging_coords = &charging_node.coordinates;
+                    }
+                }
+            }
+        }
+        charging_coords.clone()
+    }
+
     pub fn nearest_charging_station(&self, coords: &Coordinates) -> Coordinates {
         let mut dist = u32::max_value();
-        let mut temp_dist = 0;
         let mut chosen_coords = coords;
         let required_charging = ChargingOptions::from(self.mode);
         debug!("Current coordinate {:?}", &coords);
         // TODO: extend graph with charging node set, then search nearest neighbor for node if no way available
         for charging_node in &self.graph.charging_nodes {
             if charging_node.charging_options.contains(required_charging) {
-                temp_dist = coords.distance(&charging_node.coordinates);
+                let temp_dist = coords.distance(&charging_node.coordinates);
                 if temp_dist < dist {
                     chosen_coords = &charging_node.coordinates;
                     dist = temp_dist
@@ -95,27 +123,16 @@ impl<'a> Router<'a> {
         chosen_coords.clone()
     }
 
-    fn backtrack_path(&self, start_index: usize, goal_index: usize, mut current_range_in_meters: u32, max_range_in_meters: u32) -> Route {
+    fn backtrack_path(&mut self, start_index: usize, goal_index: usize) -> Route {
         let mut path = Vec::new();
         let mut time = 0;
         let mut distance = 0;
-        let mut temp_distance = 0;
         let mut edge = self.prev[goal_index];
 
         loop {
             distance += edge.distance;
-            temp_distance += edge.distance;
             time += edge.time(self.mode);
 
-            if temp_distance > current_range_in_meters {
-                let charging_station_coords = self.nearest_charging_station(&self.graph.coordinates(edge.target_index).clone());
-                let closest_to_charging_index = self.graph.nearest_neighbor(&charging_station_coords, self.mode);
-                // reset distance
-                temp_distance = 0;
-                // we recharged
-                current_range_in_meters = max_range_in_meters;
-                // TODO: find path from current node to nearest charging station, and find path from charging station to goal
-            }
             path.push(self.graph.coordinates(edge.target_index).clone());
 
             edge = self.prev[edge.source_index];
@@ -220,16 +237,17 @@ mod tests {
 
     #[test]
     fn shortest_path() {
-        let graph = Graph::from_bin("stuttgart-regbez-latest.bin");
+        let graph = Graph::from_bin("target/stuttgart-regbez-latest.bin");
         let mut router = Router::new(&graph, Car, Distance);
         let start =
-            Coordinates::from(Point::new(48.74504025447951, 9.108545780181887));
+            Coordinates::from(Point::new(48.7417761, 9.1036340));
         let goal =
-            Coordinates::from(Point::new(48.74465821861257, 9.107344150543215));
+            Coordinates::from(Point::new(48.7452193, 9.1025545));
         let max_distance = start.distance(&goal) * 2;
 
-        let route = router.shortest_path(&start, &goal, 300, 350);
-        assert!(route.unwrap().distance < max_distance);
+        let route = router.shortest_path(&start, &goal);
+        let lol = route.unwrap();
+        assert!(lol.distance < max_distance);
     }
 
     #[test]
@@ -239,7 +257,7 @@ mod tests {
         let stuttgart = Coordinates::from(Point::new(48.783418, 9.181945));
         let hamburg = Coordinates::from(Point::new(53.552483, 10.006797));
         let now = Instant::now();
-        let route = router.shortest_path(&stuttgart, &hamburg, 300, 500);
+        let route = router.shortest_path(&stuttgart, &hamburg);
         let secs = now.elapsed().as_secs();
         assert!(route.is_ok());
         assert!(secs < 10);

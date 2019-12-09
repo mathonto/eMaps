@@ -60,7 +60,7 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
         Transport::from_str(&request.transport).unwrap(),
         Routing::from_str(&request.routing).unwrap(),
     );
-    let current_range_in_meters = &request.current_range.parse::<u32>().unwrap() * 1000;
+    let mut current_range_in_meters = &request.current_range.parse::<u32>().unwrap() * 1000;
     let max_range_in_meters = &request.max_range.parse::<u32>().unwrap() * 1000;
     debug!("Calculating path...");
     debug!("Current range of e-vehicle is {}meters", &current_range_in_meters);
@@ -69,14 +69,61 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
     let route = router.shortest_path(
         &request.start.coordinates(),
         &request.goal.coordinates(),
-        current_range_in_meters,
-        max_range_in_meters
     );
+
+    let mut final_path = Vec::new();
+    let mut final_distance = 0;
+    let mut final_time = 0;
 
     match route {
         Ok(rt) => {
-            debug!("Calculated path in {}ms", now.elapsed().as_millis());
-            Ok(HttpResponse::Ok().json(Response::from(&rt)))
+            if rt.distance > current_range_in_meters {
+                let mut charging_router = Router::new(
+                    state.get_ref(),
+                    Transport::from_str(&request.transport).unwrap(),
+                    Routing::from_str(&request.routing).unwrap(),
+                );
+                let charging_route = charging_router.calc_route_with_charging_station(&request.start.coordinates(),
+                                                                                      &current_range_in_meters);
+                current_range_in_meters = max_range_in_meters.clone();
+                match charging_route {
+                    Ok(mut charging_rt) => {
+                        final_distance += charging_rt.distance;
+                        final_time += charging_rt.time;
+                        &charging_rt.path.remove(0);
+                        let mut final_router = Router::new(
+                            state.get_ref(),
+                            Transport::from_str(&request.transport).unwrap(),
+                            Routing::from_str(&request.routing).unwrap(),
+                        );
+                        let final_route = final_router.shortest_path(charging_rt.path.get(0).unwrap(), &request.goal.coordinates());
+                        match final_route {
+                            Ok(mut final_rt) => {
+                                final_distance += final_rt.distance;
+                                final_time += final_rt.time;
+                                for entry in &final_rt.path {
+                                    final_path.push(entry.clone());
+                                }
+                                for entry in &charging_rt.path {
+                                    final_path.push(entry.clone());
+                                }
+                                let final_route = Route::new(final_path, final_time, final_distance);
+                                Ok(HttpResponse::Ok().json(Response::from(&final_route)))
+                            }
+                            Err(final_err) => {
+                                Err(Error(final_err.to_string()))
+                            }
+                        }
+                    }
+                    Err(error) => {
+                        debug!("No charging path found, calculation took {}ms", now.elapsed().as_millis());
+                        Err(Error(error.to_string()))
+                    }
+                }
+            } else {
+                debug!("Calculated path in {}ms", now.elapsed().as_millis());
+                Ok(HttpResponse::Ok().json(Response::from(&rt)))
+            }
         }
         Err(err) => {
             debug!("No path found, calculation took {}ms", now.elapsed().as_millis());
@@ -92,8 +139,7 @@ struct Request {
     transport: String,
     routing: String,
     current_range: String,
-    max_range: String
-
+    max_range: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
