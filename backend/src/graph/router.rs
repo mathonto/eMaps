@@ -95,7 +95,7 @@ impl<'a> Router<'a> {
                 let dist_from_start = actual_start.distance(&charging_node.coordinates);
                 let dist_to_goal = actual_goal.distance(&charging_node.coordinates);
                 // dist to charging needs to be smaller than current range
-                if dist_from_start < current_range && dist_from_start > global_dist_from_start
+                if dist_from_start * 150 / 10 < current_range && dist_from_start > global_dist_from_start
                     && dist_to_goal < global_dist_to_goal {
                     global_dist_from_start = dist_from_start;
                     global_dist_to_goal = dist_to_goal;
@@ -104,25 +104,6 @@ impl<'a> Router<'a> {
             }
         }
         charging_coords.clone()
-    }
-
-    pub fn nearest_charging_station(&self, coords: &Coordinates) -> Coordinates {
-        let mut dist = u32::max_value();
-        let mut chosen_coords = coords;
-        let required_charging = ChargingOptions::from(self.mode);
-        debug!("Current coordinate {:?}", &coords);
-        // TODO: extend graph with charging node set, then search nearest neighbor for node if no way available
-        for charging_node in &self.graph.charging_nodes {
-            if charging_node.charging_options.contains(required_charging) {
-                let temp_dist = coords.distance(&charging_node.coordinates);
-                if temp_dist < dist {
-                    chosen_coords = &charging_node.coordinates;
-                    dist = temp_dist
-                }
-            }
-        }
-        debug!("Found charging station with coordinates {:?}", &chosen_coords);
-        chosen_coords.clone()
     }
 
     fn backtrack_path(&mut self, start_index: usize, goal_index: usize) -> Route {

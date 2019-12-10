@@ -120,13 +120,15 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
                                 required_range = rt_goal.distance;
                                 iter_count += 1;
                             }
-                            Err(err_goal) => {
+                            Err(error) => {
                                 debug!("No path found, calculation took {}ms", now.elapsed().as_millis());
+                                return Err(Error(error.to_string()));
                             }
                         }
                     }
                     Err(error) => {
-                        debug!("No charging path found, calculation took {}ms", now.elapsed().as_millis());
+                        debug!("No path found, calculation took {}ms", now.elapsed().as_millis());
+                        return Err(Error(error.to_string()));
                     }
                 }
             }
@@ -147,7 +149,7 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
             }
         }
         Err(error) => {
-            debug!("No charging path found, calculation took {}ms", now.elapsed().as_millis());
+            debug!("No path found, calculation took {}ms", now.elapsed().as_millis());
             Err(Error(error.to_string()))
         }
     }
