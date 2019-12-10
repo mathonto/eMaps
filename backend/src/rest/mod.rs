@@ -84,14 +84,15 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
                     Transport::from_str(&request.transport).unwrap(),
                     Routing::from_str(&request.routing).unwrap(),
                 );
-                let charging_route = charging_router.calc_route_with_charging_station(&request.start.coordinates(),
+                let charging_route = charging_router.calc_route_with_charging_station(&request.start.coordinates(), &request.goal.coordinates(),
                                                                                       &current_range_in_meters);
-                current_range_in_meters = max_range_in_meters.clone();
+
                 match charging_route {
                     Ok(mut charging_rt) => {
-                        let first_visit = charging_router.get_optimal_charging_station_coords(&request.start.coordinates(), current_range_in_meters.clone());
+                        let first_visit = charging_router.get_optimal_charging_station_coords(&request.start.coordinates(), &request.goal.coordinates(), current_range_in_meters.clone());
                         visited_charging_coords.push(first_visit);
 
+                        current_range_in_meters = max_range_in_meters.clone();
                         final_distance += charging_rt.distance;
                         final_time += charging_rt.time;
                         &charging_rt.path.remove(0);
