@@ -193,7 +193,9 @@ export default class Navigation extends React.Component {
             transport: "car",
             routing: "time",
             value: "",
-            suggestions: []
+            suggestions: [],
+            current_range: '',
+            max_range: ''
         })
     };
 
