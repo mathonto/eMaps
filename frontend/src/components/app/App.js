@@ -8,7 +8,7 @@ toast.configure();
 
 
 const style = {
-    backgroundColor: "#F8F8F8",
+    backgroundColor: "#86dbad",
     borderTop: "1px solid #E7E7E7",
     textAlign: "center",
     padding: "0px",

@@ -27,7 +27,7 @@ export default class Osm extends React.Component {
         const chargingIcon = L.icon({
             iconUrl: require('../assets/charge.png'),
 
-            iconSize: [50, 50],
+            iconSize: [40, 40],
             iconAnchor: [30, 30],
             popupAnchor: [-3, -76]
         });
