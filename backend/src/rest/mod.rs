@@ -71,68 +71,84 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
         &request.goal.coordinates(),
     );
 
-    let mut visited_charging_coords = Vec::new();
-    let mut final_path = Vec::new();
-    let mut final_distance = 0;
-    let mut final_time = 0;
-
     match route {
         Ok(rt) => {
-            if rt.distance > current_range_in_meters {
+            let mut required_range = rt.distance;
+            let mut final_path = Vec::new();
+            let mut final_distance = 0;
+            let mut final_time = 0;
+            let mut visited_charging_coords = Vec::new();
+            let mut start = &request.start.coordinates().clone();
+            let goal = &request.goal.coordinates().clone();
+
+            let mut iter_count = 0;
+
+            while required_range > current_range_in_meters {
                 let mut charging_router = Router::new(
                     state.get_ref(),
                     Transport::from_str(&request.transport).unwrap(),
                     Routing::from_str(&request.routing).unwrap(),
                 );
-                let charging_route = charging_router.calc_route_with_charging_station(&request.start.coordinates(), &request.goal.coordinates(),
-                                                                                      &current_range_in_meters);
 
-                match charging_route {
-                    Ok(mut charging_rt) => {
-                        let first_visit = charging_router.get_optimal_charging_station_coords(&request.start.coordinates(), &request.goal.coordinates(), current_range_in_meters.clone());
-                        visited_charging_coords.push(first_visit);
+                let route_to_charging = charging_router.calc_route_with_charging_station(start, goal, &current_range_in_meters);
+                match route_to_charging {
+                    Ok(mut rt_charging) => {
+                        let charging_coords = charging_router.get_optimal_charging_station_coords(start, goal, current_range_in_meters.clone());
+                        visited_charging_coords.push(charging_coords);
+                        start = visited_charging_coords.get(iter_count).unwrap();
+                        final_distance += rt_charging.distance;
+                        final_time += rt_charging.time;
+                        current_range_in_meters = max_range_in_meters;
+                        //remove duplicate
+                        rt_charging.path.remove(0);
+                        final_path.push(rt_charging.path.clone());
 
-                        current_range_in_meters = max_range_in_meters.clone();
-                        final_distance += charging_rt.distance;
-                        final_time += charging_rt.time;
-                        &charging_rt.path.remove(0);
-                        let mut final_router = Router::new(
+                        let mut goal_router = Router::new(
                             state.get_ref(),
                             Transport::from_str(&request.transport).unwrap(),
                             Routing::from_str(&request.routing).unwrap(),
                         );
-                        let final_route = final_router.shortest_path(charging_rt.path.get(0).unwrap(), &request.goal.coordinates());
-                        match final_route {
-                            Ok(mut final_rt) => {
-                                final_distance += final_rt.distance;
-                                final_time += final_rt.time;
-                                for entry in &final_rt.path {
-                                    final_path.push(entry.clone());
+
+                        let route_to_goal = goal_router.shortest_path(start, goal);
+                        match route_to_goal {
+                            Ok(rt_goal) => {
+                                if rt_goal.distance <= current_range_in_meters {
+                                    final_distance += rt_goal.distance;
+                                    final_time += rt_goal.time;
+                                    final_path.push(rt_goal.path.clone());
                                 }
-                                for entry in &charging_rt.path {
-                                    final_path.push(entry.clone());
-                                }
-                                let final_route = Route::new(final_path, final_time, final_distance, Option::from(visited_charging_coords));
-                                Ok(HttpResponse::Ok().json(Response::from(&final_route)))
+                                required_range = rt_goal.distance;
+                                iter_count += 1;
                             }
-                            Err(final_err) => {
-                                Err(Error(final_err.to_string()))
+                            Err(err_goal) => {
+                                debug!("No path found, calculation took {}ms", now.elapsed().as_millis());
                             }
                         }
                     }
                     Err(error) => {
                         debug!("No charging path found, calculation took {}ms", now.elapsed().as_millis());
-                        Err(Error(error.to_string()))
                     }
                 }
+            }
+            if visited_charging_coords.len() > 0 {
+                let mut result_path = Vec::new();
+                final_path.reverse();
+                for path in final_path {
+                    for entry in path {
+                        result_path.push(entry);
+                    }
+                }
+
+                let route = Route::new(result_path, final_time, final_distance, Option::from(visited_charging_coords));
+                Ok(HttpResponse::Ok().json(Response::from(&route)))
             } else {
-                debug!("Calculated path in {}ms", now.elapsed().as_millis());
-                Ok(HttpResponse::Ok().json(Response::from(&rt)))
+                let route = Route::new(rt.path, rt.time, rt.distance, None);
+                Ok(HttpResponse::Ok().json(Response::from(&route)))
             }
         }
-        Err(err) => {
-            debug!("No path found, calculation took {}ms", now.elapsed().as_millis());
-            Err(Error(err.to_string()))
+        Err(error) => {
+            debug!("No charging path found, calculation took {}ms", now.elapsed().as_millis());
+            Err(Error(error.to_string()))
         }
     }
 }
