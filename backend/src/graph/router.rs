@@ -94,8 +94,8 @@ impl<'a> Router<'a> {
             if charging_node.charging_options.contains(required_charging) {
                 let dist_from_start = actual_start.distance(&charging_node.coordinates);
                 let dist_to_goal = actual_goal.distance(&charging_node.coordinates);
-                // dist to charging needs to be smaller than current range
-                if dist_from_start * 150 / 10 < current_range && dist_from_start > global_dist_from_start
+                // add 1,5 as treshold since calculated distance is not the actual distance when driven but linear distance
+                if f64::from(dist_from_start) * 1.5 < f64::from(current_range) && dist_from_start > global_dist_from_start
                     && dist_to_goal < global_dist_to_goal {
                     global_dist_from_start = dist_from_start;
                     global_dist_to_goal = dist_to_goal;
