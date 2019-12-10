@@ -14,6 +14,7 @@ import {toast} from 'react-toastify';
 import Divider from '@material-ui/core/Divider';
 import Autosuggest from 'react-autosuggest';
 import 'react-toastify/dist/ReactToastify.css';
+import {Marker} from "react-leaflet";
 
 
 const getSuggestionValue = suggestion => suggestion.properties.display_name;
@@ -50,6 +51,7 @@ export default class Navigation extends React.Component {
             </div>
         </div>
     );
+
 
     onChange = (event, {newValue}) => {
         this.setState({
@@ -220,14 +222,21 @@ export default class Navigation extends React.Component {
         };
 
         axios.post(BASE_URL + '/shortest-path', data).then(response => {
+            console.log(response);
             const path = [];
+            const visited_charging_stations = [];
             for (const coordinates of response.data.path) {
                 path.push(Object.values(coordinates));
+            }
+            for (const charging_coords of response.data.visited_charging_coords) {
+                visited_charging_stations.push(Object.values(charging_coords));
             }
             this.props.setRoute(
                 path,
                 this.hhmm(response.data.time),
-                this.round(response.data.distance / 1000)
+                this.round(response.data.distance / 1000),
+                visited_charging_stations
+
             );
         }).catch(err => toast.error(err.response.data));
     };

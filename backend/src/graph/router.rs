@@ -141,7 +141,7 @@ impl<'a> Router<'a> {
             }
         }
         path.push(self.graph.coordinates(edge.source_index).clone());
-        Route::new(path, time, distance)
+        Route::new(path, time, distance, None)
     }
 
     fn heuristic(&self, from: usize, to: usize) -> u32 {
@@ -192,14 +192,16 @@ pub struct Route {
     pub path: Vec<Coordinates>,
     pub time: u32,
     pub distance: u32,
+    pub visited_charging: Option<Vec<Coordinates>>,
 }
 
 impl Route {
-    pub fn new(path: Vec<Coordinates>, time: u32, distance: u32) -> Self {
+    pub fn new(path: Vec<Coordinates>, time: u32, distance: u32, visited_charging: Option<Vec<Coordinates>>) -> Self {
         Self {
             path,
             time,
             distance,
+            visited_charging,
         }
     }
 }

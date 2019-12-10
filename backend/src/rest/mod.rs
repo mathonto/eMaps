@@ -71,6 +71,7 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
         &request.goal.coordinates(),
     );
 
+    let mut visited_charging_coords = Vec::new();
     let mut final_path = Vec::new();
     let mut final_distance = 0;
     let mut final_time = 0;
@@ -88,6 +89,9 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
                 current_range_in_meters = max_range_in_meters.clone();
                 match charging_route {
                     Ok(mut charging_rt) => {
+                        let first_visit = charging_router.get_optimal_charging_station_coords(&request.start.coordinates(), current_range_in_meters.clone());
+                        visited_charging_coords.push(first_visit);
+
                         final_distance += charging_rt.distance;
                         final_time += charging_rt.time;
                         &charging_rt.path.remove(0);
@@ -107,7 +111,7 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
                                 for entry in &charging_rt.path {
                                     final_path.push(entry.clone());
                                 }
-                                let final_route = Route::new(final_path, final_time, final_distance);
+                                let final_route = Route::new(final_path, final_time, final_distance, Option::from(visited_charging_coords));
                                 Ok(HttpResponse::Ok().json(Response::from(&final_route)))
                             }
                             Err(final_err) => {
@@ -147,6 +151,7 @@ struct Response {
     path: Vec<FloatCoordinates>,
     time: u32,
     distance: u32,
+    visited_charging_coords: Vec<FloatCoordinates>,
 }
 
 impl Response {
@@ -154,10 +159,15 @@ impl Response {
         let path = route.path.iter()
             .map(|coord| FloatCoordinates::from(coord))
             .collect();
+        let charging = route.visited_charging.as_ref().unwrap();
+        let visited_charging_coords = charging.iter()
+            .map(|coord| FloatCoordinates::from(coord))
+            .collect();
         Self {
             path,
             time: route.time,
             distance: route.distance,
+            visited_charging_coords,
         }
     }
 }

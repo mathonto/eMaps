@@ -1,5 +1,6 @@
 import React from "react";
 import {Map, Marker, Polyline, TileLayer} from "react-leaflet";
+import L from 'leaflet'
 
 export default class Osm extends React.Component {
     constructor(props) {
@@ -22,6 +23,17 @@ export default class Osm extends React.Component {
         }
     }
 
+    getMarker() {
+        const chargingIcon = L.icon({
+            iconUrl: require('../assets/charge.png'),
+
+            iconSize: [50, 50],
+            iconAnchor: [30, 30],
+            popupAnchor: [-3, -76]
+        });
+        return chargingIcon;
+    }
+
     render() {
         return (
             <Map center={this.state.coordinates}
@@ -34,6 +46,7 @@ export default class Osm extends React.Component {
 
                 {this.props.state.from.coordinates && <Marker position={this.props.state.from.coordinates}/>}
                 {this.props.state.to.coordinates && <Marker position={this.props.state.to.coordinates}/>}
+                {this.props.state.chargingMarkers.map(el => <Marker position={el} icon={this.getMarker()}/>)}
 
                 {this.props.state.path.length >= 2 && <Polyline positions={this.props.state.path}
                                                                 color={'blue'}/>}
