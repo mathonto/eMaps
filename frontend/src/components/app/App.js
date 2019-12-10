@@ -65,7 +65,7 @@ export default class App extends React.Component {
             path: [],
             time: '0h 0min',
             distance: 0,
-            chargingMarkers: [],
+            chargingMarkers: []
         });
     };
 
@@ -82,7 +82,9 @@ export default class App extends React.Component {
                             clearMap={this.clearMap}/>
                 <div>
                     <div style={style}>
-                        Charging Station Icon made by <a href="https://www.flaticon.com/authors/nhor-phai">nhor-phai</a> from <a href="www.flaticon.com">www.flaticon.com</a>
+                        Charging Station Icon made by <a
+                        href="https://www.flaticon.com/authors/nhor-phai">nhor-phai</a> from <a
+                        href="www.flaticon.com">www.flaticon.com</a>
                     </div>
                 </div>
             </div>

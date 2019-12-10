@@ -23,13 +23,8 @@ pub enum Highway {
 
     LivingStreet,
     Service,
-    Pedestrian,
     Track,
     Road,
-
-    Footway,
-    Steps,
-    Path,
 
     Cycleway,
 }

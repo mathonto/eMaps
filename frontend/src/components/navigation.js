@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
-import {DirectionsBike, DirectionsCar, DirectionsWalk} from "@material-ui/icons";
+import {DirectionsBike, DirectionsCar} from "@material-ui/icons";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
@@ -14,7 +14,6 @@ import {toast} from 'react-toastify';
 import Divider from '@material-ui/core/Divider';
 import Autosuggest from 'react-autosuggest';
 import 'react-toastify/dist/ReactToastify.css';
-import {Marker} from "react-leaflet";
 
 
 const getSuggestionValue = suggestion => suggestion.properties.display_name;
@@ -34,6 +33,11 @@ export default class Navigation extends React.Component {
             suggestions: [],
             current_range: '',
             max_range: ''
+        };
+
+        document.oncontextmenu = () => {
+            this.reset()
+            return false;
         };
     }
 
@@ -134,9 +138,6 @@ export default class Navigation extends React.Component {
                         <ToggleButton value="bike">
                             <DirectionsBike/>
                         </ToggleButton>
-                        <ToggleButton value="walk">
-                            <DirectionsWalk/>
-                        </ToggleButton>
                     </ToggleButtonGroup>
 
                     <RadioGroup value={this.state.routing}
@@ -157,6 +158,7 @@ export default class Navigation extends React.Component {
                 </div>
                 <div style={{width: 300}}>
                     <Input id='input-current-range'
+                           title='Current range (km)'
                            placeholder='Current range (km)...'
                            value={this.state.current_range}
                            onChange={this.currentRangeChange}
@@ -238,7 +240,6 @@ export default class Navigation extends React.Component {
                 this.hhmm(response.data.time),
                 this.round(response.data.distance / 1000),
                 visited_charging_stations
-
             );
         }).catch(err => toast.error(err.response.data));
     };

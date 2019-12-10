@@ -10,7 +10,7 @@ use stable_vec::StableVec;
 use crate::osm::highway::Kmh;
 use crate::osm::options::{Routing, Transport, ChargingOptions};
 use crate::osm::options::Routing::Time;
-use crate::osm::options::Transport::{Bike, Car, Walk};
+use crate::osm::options::Transport::{Bike, Car};
 use crate::osm::pbf::Pbf;
 use crate::osm::Coordinates;
 
@@ -147,7 +147,6 @@ impl Edge {
         match mode {
             Car => self.max_speed.time(self.distance),
             Bike => Kmh::new(20).time(self.distance),
-            Walk => Kmh::new(5).time(self.distance),
             _ => panic!("Unsupported transport mode")
         }
     }
