@@ -176,15 +176,25 @@ impl Response {
         let path = route.path.iter()
             .map(|coord| FloatCoordinates::from(coord))
             .collect();
-        let charging = route.visited_charging.as_ref().unwrap();
-        let visited_charging_coords = charging.iter()
-            .map(|coord| FloatCoordinates::from(coord))
-            .collect();
-        Self {
-            path,
-            time: route.time,
-            distance: route.distance,
-            visited_charging_coords,
+        let visited_charging_coords = route.visited_charging.clone();
+        if visited_charging_coords.is_some() {
+            let charging = route.visited_charging.as_ref().unwrap();
+            let visited_charging_coords = charging.iter()
+                .map(|coord| FloatCoordinates::from(coord))
+                .collect();
+            Self {
+                path,
+                time: route.time,
+                distance: route.distance,
+                visited_charging_coords,
+            }
+        } else {
+            Self {
+                path,
+                time: route.time,
+                distance: route.distance,
+                visited_charging_coords: vec![],
+            }
         }
     }
 }
