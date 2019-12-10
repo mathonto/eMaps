@@ -1,5 +1,5 @@
 import React from "react";
-import {Map, Marker, Polyline, TileLayer} from "react-leaflet";
+import {Map, Marker, Polyline, TileLayer, Tooltip} from "react-leaflet";
 import L from 'leaflet'
 
 export default class Osm extends React.Component {
@@ -34,6 +34,16 @@ export default class Osm extends React.Component {
         return chargingIcon;
     }
 
+    getCounter = (el) => {
+        let index = 0;
+        for (const element of this.props.state.chargingMarkers) {
+            index += 1;
+            if (element == el) {
+                return index;
+            }
+        }
+    }
+
     render() {
         return (
             <Map center={this.state.coordinates}
@@ -46,7 +56,9 @@ export default class Osm extends React.Component {
 
                 {this.props.state.from.coordinates && <Marker position={this.props.state.from.coordinates}/>}
                 {this.props.state.to.coordinates && <Marker position={this.props.state.to.coordinates}/>}
-                {this.props.state.chargingMarkers.map(el => <Marker position={el} icon={this.getMarker()}/>)}
+                {this.props.state.chargingMarkers.map(el => <Marker position={el} icon={this.getMarker()}>
+                    <Tooltip direction='right' offset={[-8, -2]} opacity={1}
+                             permanent><span>STOP {this.getCounter(el)}</span></Tooltip></Marker>)}
 
                 {this.props.state.path.length >= 2 && <Polyline positions={this.props.state.path}
                                                                 color={'blue'}/>}
