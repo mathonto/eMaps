@@ -14,7 +14,8 @@ import {toast} from 'react-toastify';
 import Divider from '@material-ui/core/Divider';
 import Autosuggest from 'react-autosuggest';
 import 'react-toastify/dist/ReactToastify.css';
-
+import TextField from '@material-ui/core/TextField';
+import {spacing} from "@material-ui/system";
 
 const getSuggestionValue = suggestion => suggestion.properties.display_name;
 
@@ -36,7 +37,7 @@ export default class Navigation extends React.Component {
         };
 
         document.oncontextmenu = () => {
-            this.reset()
+            this.reset();
             return false;
         };
     }
@@ -156,18 +157,15 @@ export default class Navigation extends React.Component {
                         </div>
                     </RadioGroup>
                 </div>
-                <div style={{width: 300}}>
-                    <Input id='input-current-range'
-                           title='Current range (km)'
-                           placeholder='Current range (km)...'
-                           value={this.state.current_range}
-                           onChange={this.currentRangeChange}
-                    />
-                    <Input id='input-max-range'
-                           placeholder='Max. range (km)...'
-                           value={this.state.max_range}
-                           onChange={this.maxRangeChange}
-                    />
+                <div style={{marginTop: '10px'}}>
+                    <form className='rowC' noValidate autoComplete="off">
+                        <TextField id="outlined-basic" label="Current range (km)" variant="outlined"
+                                   value={this.state.current_range}
+                                   onChange={this.currentRangeChange}/>
+                        <TextField id="outlined-basic-2" label="Max. range (km)" variant="outlined"
+                                   value={this.state.max_range}
+                                   onChange={this.maxRangeChange}/>
+                    </form>
                 </div>
                 <div>
                     <ButtonGroup fullWidth aria-label="split button">
@@ -186,7 +184,8 @@ export default class Navigation extends React.Component {
                     <a>{this.props.state.distance}km</a>
                 </div>
             </div>
-        );
+        )
+            ;
     }
 
     reset = () => {
