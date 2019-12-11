@@ -15,7 +15,6 @@ import Divider from '@material-ui/core/Divider';
 import Autosuggest from 'react-autosuggest';
 import 'react-toastify/dist/ReactToastify.css';
 import TextField from '@material-ui/core/TextField';
-import {spacing} from "@material-ui/system";
 
 const getSuggestionValue = suggestion => suggestion.properties.display_name;
 
@@ -159,10 +158,11 @@ export default class Navigation extends React.Component {
                 </div>
                 <div style={{marginTop: '10px'}}>
                     <form className='rowC' noValidate autoComplete="off">
-                        <TextField id="outlined-basic" label="Current range (km)" variant="outlined"
+                        <TextField id="outlined-basic" label="Current range (km)"
                                    value={this.state.current_range}
                                    onChange={this.currentRangeChange}/>
-                        <TextField id="outlined-basic-2" label="Max. range (km)" variant="outlined"
+                                   <div style={{width: '15px'}}></div>
+                        <TextField id="outlined-basic-2" label="Max. range (km)"
                                    value={this.state.max_range}
                                    onChange={this.maxRangeChange}/>
                     </form>
