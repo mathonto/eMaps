@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import {Collapse} from 'react-collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import EvStationIcon from '@material-ui/icons/EvStation';
 
 toast.configure();
 
@@ -86,8 +87,16 @@ export default class App extends React.Component {
                 <Osm state={this.state}
                      setFrom={this.setFrom}
                      setTo={this.setTo}/>
-                {this.state.isOpened && (<Button color="primary" variant="contained" onClick={() => this.changeOpen()}><ExpandLessIcon></ExpandLessIcon></Button>)}
-                {!this.state.isOpened && (<Button color="primary" variant="contained" onClick={() => this.changeOpen()}><ExpandMoreIcon></ExpandMoreIcon></Button>)}
+                <div className='rowC'>
+                    {this.state.isOpened && (<Button color="primary" variant="contained"
+                                                     onClick={() => this.changeOpen()}><ExpandLessIcon></ExpandLessIcon></Button>)}
+                    {!this.state.isOpened && (<Button color="primary" variant="contained"
+                                                      onClick={() => this.changeOpen()}><ExpandMoreIcon></ExpandMoreIcon></Button>)}
+                    <div style={{minWidth: '300px'}}>
+                        <Button color="secondary" onClick={() => window.open("https://github.com/mathonto/maps")}
+                                variant="contained">e-Maps<EvStationIcon></EvStationIcon></Button>
+                    </div>
+                </div>
                 <Collapse isOpened={this.state.isOpened}>
                     <Navigation state={this.state}
                                 setRoute={this.setRoute}
