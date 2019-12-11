@@ -161,7 +161,7 @@ export default class Navigation extends React.Component {
                         <TextField id="outlined-basic" label="Current range (km)"
                                    value={this.state.current_range}
                                    onChange={this.currentRangeChange}/>
-                                   <div style={{width: '15px'}}></div>
+                        <div style={{width: '15px'}}></div>
                         <TextField id="outlined-basic-2" label="Max. range (km)"
                                    value={this.state.max_range}
                                    onChange={this.maxRangeChange}/>
@@ -265,6 +265,7 @@ export default class Navigation extends React.Component {
         });
     };
 
+    // TODO: refactor to remove duplicate code
     currentRangeChange = (e) => {
         const re = /^[0-9\b]+$/;
 
@@ -272,18 +273,27 @@ export default class Navigation extends React.Component {
             toast.error('Current range cannot be bigger than maximum range');
         } else {
             if (e.target.value === '' || re.test(e.target.value)) {
-                this.setState({current_range: e.target.value})
+                if ((Number(e.target.value) < 4294968)) {
+                    this.setState({current_range: e.target.value})
+                } else {
+                    toast.error('Please enter a number below the max. value of 4294968');
+                }
             } else {
                 toast.error('Please enter a number');
             }
         }
     }
 
+    // TODO: refactor to remove duplicate code
     maxRangeChange = (e) => {
         const re = /^[0-9\b]+$/;
 
         if (e.target.value === '' || re.test(e.target.value)) {
-            this.setState({max_range: e.target.value})
+            if ((Number(e.target.value) < 4294968)) {
+                this.setState({max_range: e.target.value})
+            } else {
+                toast.error('Please enter a number below the max. value of 4294968');
+            }
         } else {
             toast.error('Please enter a number');
         }
