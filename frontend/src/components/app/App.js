@@ -3,9 +3,12 @@ import './App.css';
 import Osm from "../osm";
 import Navigation from "../navigation";
 import {toast} from 'react-toastify';
+import Button from "@material-ui/core/Button";
+import {Collapse} from 'react-collapse';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 toast.configure();
-
 
 const style = {
     backgroundColor: "#86dbad",
@@ -20,6 +23,7 @@ const style = {
 }
 
 export default class App extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -28,7 +32,8 @@ export default class App extends React.Component {
             path: [],
             time: '0h 0min',
             distance: 0,
-            chargingMarkers: []
+            chargingMarkers: [],
+            isOpened: false
         };
 
         document.oncontextmenu = () => {
@@ -69,17 +74,27 @@ export default class App extends React.Component {
         });
     };
 
+    changeOpen() {
+        this.setState({
+            isOpened: !this.state.isOpened
+        });
+    }
+
     render() {
         return (
             <div>
                 <Osm state={this.state}
                      setFrom={this.setFrom}
                      setTo={this.setTo}/>
-                <Navigation state={this.state}
-                            setRoute={this.setRoute}
-                            setFrom={this.setFrom}
-                            setTo={this.setTo}
-                            clearMap={this.clearMap}/>
+                {this.state.isOpened && (<Button color="primary" variant="contained" onClick={() => this.changeOpen()}><ExpandLessIcon></ExpandLessIcon></Button>)}
+                {!this.state.isOpened && (<Button color="primary" variant="contained" onClick={() => this.changeOpen()}><ExpandMoreIcon></ExpandMoreIcon></Button>)}
+                <Collapse isOpened={this.state.isOpened}>
+                    <Navigation state={this.state}
+                                setRoute={this.setRoute}
+                                setFrom={this.setFrom}
+                                setTo={this.setTo}
+                                clearMap={this.clearMap}/>
+                </Collapse>
                 <div>
                     <div style={style}>
                         Charging Station Icon made by <a
