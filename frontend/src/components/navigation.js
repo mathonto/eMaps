@@ -107,7 +107,7 @@ export default class Navigation extends React.Component {
         };
 
         return (
-            <div id='navigation'>
+            <div id='navigation' style={{width: '350px'}}>
                 <StyledWrapper>
                     <Autosuggest
                         suggestions={suggestions}
