@@ -181,7 +181,7 @@ impl<'a> Router<'a> {
         let mut edge = self.prev[goal_index];
 
         loop {
-            // increment distance and time based on edge
+            // increment distance and time of route based on edge
             distance += edge.distance;
             time += edge.time(self.mode);
 
@@ -227,7 +227,7 @@ struct RouterNode {
 
 impl RouterNode {
     /**
-    Create new router node with index, cost and heuristic value
+    Create new router node with index, cost and heuristic value.
     *
     @param index: index of router node in graph
     @param cost: cost based on node + edge
@@ -244,7 +244,7 @@ impl RouterNode {
     }
 
     /**
-    Priority function for router nodes based on cost and heuristic
+    Priority function for router nodes based on cost and heuristic.
     *
     @param self: router node
     *
@@ -257,7 +257,7 @@ impl RouterNode {
 
 impl Ord for RouterNode {
     /**
-    Absolute ordering for router nodes
+    Absolute ordering for router nodes.
     *
     @param self: router node a
     @param other: router node b

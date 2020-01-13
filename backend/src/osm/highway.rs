@@ -30,12 +30,28 @@ pub enum Highway {
 }
 
 impl Highway {
+    /**
+    Get highway type from osm way
+    *
+    @param way: osm way
+    *
+    @return (optional) highway type of way
+    */
     pub fn from(way: &Way) -> Option<Self> {
+        // get highway tag which specifies highway type
         let tag = way.tags.get("highway")?;
         Self::from_str(tag).ok()
     }
 
+    /**
+    Speed function for highway types
+    *
+    @param self: highway
+    *
+    @return (optional) speed in kmh
+    */
     pub fn default_speed(self) -> Option<Kmh> {
+        // assign highway types to speed
         let speed = match self {
             Self::Motorway => 120,
             Self::Trunk => 120,
@@ -51,6 +67,7 @@ impl Highway {
             Self::TertiaryLink => 50,
             Self::LivingStreet => 5,
             Self::Service => 30,
+            // default 30kmh
             _ => 30
         };
         Some(Kmh::new(speed))
@@ -63,17 +80,34 @@ pub struct Kmh {
 }
 
 impl Kmh {
+    /**
+    Create new kmh object.
+    *
+    @param speed: speed in kmh
+    *
+    @return kmh object
+    */
     pub fn new(speed: u32) -> Self {
         Self { speed }
     }
 
+    /**
+    Create kmh object from osm way.
+    *
+    @param way: osm way
+    *
+    @return (optional) kmh object specifying speed of way
+    */
     pub fn from(way: &Way) -> Option<Self> {
+        // get max speed tag of a way
         let tag = way.tags.get("maxspeed")?;
 
         if let Ok(speed) = tag.parse::<u32>() {
             Some(Self::new(speed))
         } else {
+            // get list of speed tags
             let speed: Vec<&str> = tag.split(' ').collect();
+            // if speed specified in mph, convert to kmh
             if *speed.get(1)? == "mph" {
                 let mph = speed.get(0)?
                     .parse::<u32>().ok()?;
@@ -84,6 +118,14 @@ impl Kmh {
         }
     }
 
+    /**
+    Get time needed to travel along a distance with certain speed.
+    *
+    @param self: speed in kmh
+    @param distance: distance to travel
+    *
+    @return time needed to travel distance with speed
+    */
     pub fn time(self, distance: u32) -> u32 {
         let ms = self.speed as f32 / 3.6;
         (distance as f32 / ms).round() as u32

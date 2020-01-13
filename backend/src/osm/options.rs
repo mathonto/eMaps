@@ -28,6 +28,13 @@ pub enum ChargingOptions {
 }
 
 impl ChargingOptions {
+    /**
+    Create charging option object based on transport mode of routing.
+    *
+    @param transport: transportation mode (bike/car)
+    *
+    @return charging options based on transportation mode
+    */
     pub fn from(transport: Transport) -> Self {
         match transport {
             Bike => ChargingOptions::Bike,
@@ -37,6 +44,14 @@ impl ChargingOptions {
         }
     }
 
+    /**
+    Check if charging option(s) contain charging option(s).
+    *
+    @param self: charging options a
+    @param other: charging options b
+    *
+    @return true if charging option a contains all options, equals b or contains b
+    */
     pub fn contains(self, other: Self) -> bool {
         self == ChargingOptions::CarBike || self == other
             || self == ChargingOptions::CarBike && (other == ChargingOptions::Car || other == ChargingOptions::Bike)
@@ -44,7 +59,15 @@ impl ChargingOptions {
 }
 
 impl Transport {
+    /**
+    Create transport mode object from highway type.
+    *
+    @param highway: highway type
+    *
+    @return transport mode object
+    */
     pub fn from(highway: Highway) -> Self {
+        // assign highway type to transportation mode, e.g. only car transportation mode is valid for motorway
         match highway {
             Residential | Tertiary | Unclassified | Service | LivingStreet | TertiaryLink => All,
             Secondary | SecondaryLink | Primary | PrimaryLink => CarBike,
@@ -53,6 +76,14 @@ impl Transport {
         }
     }
 
+    /**
+    Check if transportation mode a contains transportation mode b.
+    *
+    @param self: transportation mode a
+    @param other: transportation mode b
+    *
+    @return true if transportation mode a has all transportation modes, equals b, or contains b
+    */
     pub fn contains(self, other: Self) -> bool {
         self == All || self == other ||
             (self == CarBike && (other == Car || other == Bike))
