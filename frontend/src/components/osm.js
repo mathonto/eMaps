@@ -23,6 +23,9 @@ export default class Osm extends React.Component {
         }
     }
 
+    /**
+     * Get charging station icon.
+     */
     getMarker() {
         const chargingIcon = L.icon({
             iconUrl: require('../assets/charge.png'),
@@ -34,6 +37,11 @@ export default class Osm extends React.Component {
         return chargingIcon;
     }
 
+    /**
+     * Get index of charging station stop.
+     * @param el: charging station
+     * @returns {number}
+     */
     getCounter = (el) => {
         let index = 0;
         for (const element of this.props.state.chargingMarkers) {
@@ -66,7 +74,12 @@ export default class Osm extends React.Component {
         );
     }
 
+    /**
+     * Set from/to value on click on map.
+     * @param event: called when map is clicked
+     */
     setMarkers = (event) => {
+        // get coordinates from event
         const coordinates = Object.values(event.latlng);
         const value = {
             name: coordinates,

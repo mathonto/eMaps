@@ -18,6 +18,11 @@ import TextField from '@material-ui/core/TextField';
 
 const getSuggestionValue = suggestion => suggestion.properties.display_name;
 
+/**
+ * Only render suggestion if user input is at least 3 chars.
+ * @param value: user input
+ * @returns {boolean}
+ */
 function shouldRenderSuggestions(value) {
     return value.trim().length > 2;
 }
@@ -56,31 +61,50 @@ export default class Navigation extends React.Component {
         </div>
     );
 
-
+    /**
+     * Called when user changes input.
+     * @param event: event of change
+     * @param newValue: changed value
+     */
     onChange = (event, {newValue}) => {
         this.setState({
             value: newValue
         });
     };
 
+    /**
+     * Called when suggestions need to be fetched from nominatim api.
+     * @param value: input value of user
+     */
     onSuggestionsFetchRequested = ({value}) => {
         axios.post(NOMINATIM_API + '/search/?q=' + value + '&format=geojson&countrycodes=de').then(response => response.data)
             .then(data => this.setState({suggestions: data.features.slice(0, 7)}));
     };
 
+    /**
+     * Called when user clears input.
+     */
     onSuggestionsClearRequested = () => {
         this.setState({
             suggestions: []
         });
     };
 
+    /**
+     * Called when user selects a suggestion.
+     */
     onSuggestionSelected = () => {
         this.setState({
             value: ''
         });
     };
 
+    /**
+     * Called when user selects a suggestion as start.
+     * @param suggestion: selected suggestion
+     */
     asStart = (suggestion) => {
+        // get name and coordinates of suggestion
         const name = suggestion.properties.display_name;
         const coordinates = suggestion.geometry.coordinates.reverse();
         this.props.setFrom({
@@ -89,7 +113,12 @@ export default class Navigation extends React.Component {
         });
     };
 
+    /**
+     * Called when user selects a suggestion as destination.
+     * @param suggestion: selected suggestion
+     */
     asDest = (suggestion) => {
+        // get name and coordinates of suggestion
         const name = suggestion.properties.display_name;
         const coordinates = suggestion.geometry.coordinates.reverse();
         this.props.setTo({
@@ -188,6 +217,9 @@ export default class Navigation extends React.Component {
             ;
     }
 
+    /**
+     * Reset everything.
+     */
     reset = () => {
         this.props.clearMap();
         this.setState({
@@ -200,15 +232,21 @@ export default class Navigation extends React.Component {
         })
     };
 
+    /**
+     * Start shortest path calculation.
+     */
     go = () => {
+        // check if everything required for route calculation is set
         if (!this.props.state.from.coordinates || !this.props.state.to.coordinates
             || !this.state.current_range || !this.state.max_range) {
             toast.error('Please select start, goal, current and max. range');
             return;
+            // sanity check for input of current and max. range
         } else if (Number(this.state.current_range) > Number(this.state.max_range)) {
             toast.error('Current range cannot be bigger than max. range');
             return;
         }
+        // extract data from state
         const data = {
             start: {
                 lat: this.props.state.from.coordinates[0],
@@ -223,17 +261,19 @@ export default class Navigation extends React.Component {
             current_range: this.state.current_range,
             max_range: this.state.max_range
         };
-
+        // shortest path request with data
         axios.post(BASE_URL + '/shortest-path', data).then(response => {
-            console.log(response);
             const path = [];
             const visited_charging_stations = [];
+            // extract path
             for (const coordinates of response.data.path) {
                 path.push(Object.values(coordinates));
             }
+            // extract visited charging stations
             for (const charging_coords of response.data.visited_charging_coords) {
                 visited_charging_stations.push(Object.values(charging_coords));
             }
+            // set route
             this.props.setRoute(
                 path,
                 this.hhmm(response.data.time),
@@ -243,59 +283,91 @@ export default class Navigation extends React.Component {
         }).catch(err => toast.error(err.response.data));
     };
 
+    /**
+     * Round distance.
+     * @param value: distance of route
+     * @returns {number}
+     */
     round = (value) => {
         return Math.round(value * 10) / 10
     };
 
+    /**
+     * Format time needed for route.
+     * @param secs: time in second
+     * @returns {string}
+     */
     hhmm = (secs) => {
+        // extract hours and minutes
         const hours = Math.floor(secs / 3600);
         const minutes = Math.floor((secs - (hours * 3600)) / 60);
         return hours + 'h ' + minutes + 'min';
     };
 
+    /**
+     * Setter for navigation type (car/bike).
+     * @param event: event called when toggle is clicked
+     * @param newNavType: updated value
+     */
     handleNavType = (event, newNavType) => {
         this.setState({
             transport: newNavType,
         });
     };
 
+    /**
+     * Setter for routing preference (time/distance).
+     * @param event: event called when toggle is clicked
+     */
     handleMetric = (event) => {
         this.setState({
             routing: event.target.value
         });
     };
 
-    // TODO: refactor to remove duplicate code
+    /**
+     * Called when input for current range changes.
+     * @param e: changed input event
+     */
     currentRangeChange = (e) => {
-        const re = /^[0-9\b]+$/;
-
+        // check if current range is bigger than maximum range
         if (this.state.max_range.length > 0 && Number(e.target.value) > Number(this.state.max_range)) {
             toast.error('Current range cannot be bigger than maximum range');
         } else {
-            if (e.target.value === '' || re.test(e.target.value)) {
-                if ((Number(e.target.value) < 4294968)) {
-                    this.setState({current_range: e.target.value})
-                } else {
-                    toast.error('Please enter a number below the max. value of 4294968');
-                }
+            if (this.sanitizeRangeInput(e.target.value)) {
+                this.setState({current_range: e.target.value})
             } else {
-                toast.error('Please enter a number');
+                toast.error('Please enter a number (below the max. value of 4294968)');
             }
         }
     }
 
-    // TODO: refactor to remove duplicate code
-    maxRangeChange = (e) => {
+    /**
+     * Sanitize user input for range.
+     * @param range: input of user
+     * @returns {boolean}
+     */
+    sanitizeRangeInput = (range) => {
+        // regex to sanitize input of range
         const re = /^[0-9\b]+$/;
 
-        if (e.target.value === '' || re.test(e.target.value)) {
-            if ((Number(e.target.value) < 4294968)) {
-                this.setState({max_range: e.target.value})
-            } else {
-                toast.error('Please enter a number below the max. value of 4294968');
+        if (range === '' || re.test(range)) {
+            if ((Number(range) < 4294968)) {
+                return true;
             }
+        }
+        return false;
+    }
+
+    /**
+     * Called when input for max range changes.
+     * @param e: changed input event
+     */
+    maxRangeChange = (e) => {
+        if (this.sanitizeRangeInput(e.target.value)) {
+            this.setState({max_range: e.target.value})
         } else {
-            toast.error('Please enter a number');
+            toast.error('Please enter a number (below the max. value of 4294968)');
         }
     }
 }

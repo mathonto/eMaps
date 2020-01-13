@@ -43,18 +43,34 @@ export default class App extends React.Component {
         };
     }
 
+    /**
+     * Setter for start of navigation.
+     * @param from: start coordinates
+     */
     setFrom = (from) => {
         this.setState({
             from: from
         });
     };
 
+    /**
+     * Setter for goal of navigation.
+     * @param to: goal coordinates
+     */
     setTo = (to) => {
         this.setState({
             to: to
         });
     };
 
+    /**
+     * Update state with calculated route.
+     *
+     * @param path: coordinates to be displayed as route
+     * @param time: time needed for route
+     * @param distance: distance of route
+     * @param chargingMarkers: coordinates of possibly visited charging stations
+     */
     setRoute = (path, time, distance, chargingMarkers) => {
         this.setState({
             path: path,
@@ -64,6 +80,9 @@ export default class App extends React.Component {
         });
     };
 
+    /**
+     * Reset everything.
+     */
     clearMap = () => {
         this.setState({
             from: {name: undefined, coordinates: undefined},
@@ -75,6 +94,9 @@ export default class App extends React.Component {
         });
     };
 
+    /**
+     * Change state of drawer (open/closed).
+     */
     changeOpen() {
         this.setState({
             isOpened: !this.state.isOpened
