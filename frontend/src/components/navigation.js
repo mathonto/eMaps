@@ -1,20 +1,33 @@
 import React from "react";
-import {Input} from "@material-ui/core";
+import { Input } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
-import {DirectionsBike, DirectionsCar} from "@material-ui/icons";
+import { DirectionsBike, DirectionsCar } from "@material-ui/icons";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
-import {BASE_URL, NOMINATIM_API, StyledWrapper} from "../config";
+import { BASE_URL, NOMINATIM_API, StyledWrapper } from "../config";
 import axios from 'axios';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 import Divider from '@material-ui/core/Divider';
 import Autosuggest from 'react-autosuggest';
 import 'react-toastify/dist/ReactToastify.css';
 import TextField from '@material-ui/core/TextField';
+import LoadingOverlay from 'react-loading-overlay';
+import styled from 'styled-components'
+
+const StyledLoader = styled(LoadingOverlay)`
+  width: 372px;
+  height: 342px;
+  .MyLoader_overlay {
+    background: rgba(232, 236, 241, 1));
+  }
+  &.MyLoader_wrapper--active {
+    overflow: hidden;
+  }
+`
 
 const getSuggestionValue = suggestion => suggestion.properties.display_name;
 
@@ -37,7 +50,8 @@ export default class Navigation extends React.Component {
             value: '',
             suggestions: [],
             current_range: '',
-            max_range: ''
+            max_range: '',
+            isCalculating: false
         };
 
         document.oncontextmenu = () => {
@@ -99,6 +113,12 @@ export default class Navigation extends React.Component {
         });
     };
 
+    onCalculating = () => {
+        this.setState({
+            isCalculating: !this.state.isCalculating
+        });
+    };
+
     /**
      * Called when user selects a suggestion as start.
      * @param suggestion: selected suggestion
@@ -136,83 +156,90 @@ export default class Navigation extends React.Component {
         };
 
         return (
-            <div id='navigation' style={{width: '350px'}}>
-                <StyledWrapper>
-                    <Autosuggest
-                        suggestions={suggestions}
-                        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-                        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                        getSuggestionValue={getSuggestionValue}
-                        renderSuggestion={this.renderSuggestion}
-                        shouldRenderSuggestions={shouldRenderSuggestions}
-                        onSuggestionSelected={this.onSuggestionSelected}
-                        inputProps={inputProps}
-                    />
-                </StyledWrapper>
-                <Input id='input-from'
-                       placeholder='From'
-                       value={this.props.state.from.name || ''}/>
-                <Input id='input-to'
-                       placeholder='To'
-                       value={this.props.state.to.name || ''}/>
+            <StyledLoader
+                active={this.state.isCalculating}
+                spinner
+                classNamePrefix='MyLoader_'
+                text='Calculating route...'
+            >
+                <div id='navigation' style={{width: '350px'}}>
+                    <StyledWrapper>
+                        <Autosuggest
+                            suggestions={suggestions}
+                            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                            getSuggestionValue={getSuggestionValue}
+                            renderSuggestion={this.renderSuggestion}
+                            shouldRenderSuggestions={shouldRenderSuggestions}
+                            onSuggestionSelected={this.onSuggestionSelected}
+                            inputProps={inputProps}
+                        />
+                    </StyledWrapper>
+                    <Input id='input-from'
+                           placeholder='From'
+                           value={this.props.state.from.name || ''}/>
+                    <Input id='input-to'
+                           placeholder='To'
+                           value={this.props.state.to.name || ''}/>
 
-                <div id="nav-settings">
-                    <ToggleButtonGroup id="button-group"
-                                       value={this.state.transport}
-                                       exclusive
-                                       onChange={this.handleNavType}>
-                        <ToggleButton value="car">
-                            <DirectionsCar/>
-                        </ToggleButton>
-                        <ToggleButton value="bike">
-                            <DirectionsBike/>
-                        </ToggleButton>
-                    </ToggleButtonGroup>
+                    <div id="nav-settings">
+                        <ToggleButtonGroup id="button-group"
+                                           value={this.state.transport}
+                                           exclusive
+                                           onChange={this.handleNavType}>
+                            <ToggleButton value="car">
+                                <DirectionsCar/>
+                            </ToggleButton>
+                            <ToggleButton value="bike">
+                                <DirectionsBike/>
+                            </ToggleButton>
+                        </ToggleButtonGroup>
 
-                    <RadioGroup value={this.state.routing}
-                                onChange={this.handleMetric}>
-                        <div id="nav-metric-radios">
-                            <FormControlLabel
-                                value="time"
-                                control={<Radio color="primary"/>}
-                                label="Time"
-                                labelPlacement="start"/>
-                            <FormControlLabel
-                                value="distance"
-                                control={<Radio color="primary"/>}
-                                label="Distance"
-                                labelPlacement="start"/>
-                        </div>
-                    </RadioGroup>
-                </div>
-                <div style={{marginTop: '10px'}}>
-                    <form className='rowC' noValidate autoComplete="off">
-                        <TextField id="outlined-basic" label="Current range (km)"
-                                   value={this.state.current_range}
-                                   onChange={this.currentRangeChange}/>
-                        <div style={{width: '15px'}}></div>
-                        <TextField id="outlined-basic-2" label="Max. range (km)"
-                                   value={this.state.max_range}
-                                   onChange={this.maxRangeChange}/>
-                    </form>
-                </div>
-                <div>
-                    <ButtonGroup fullWidth aria-label="split button">
-                        <Button
-                            id='go'
-                            variant="contained"
-                            onClick={this.go}>GO</Button>
-                        <Button id='reset'
+                        <RadioGroup value={this.state.routing}
+                                    onChange={this.handleMetric}>
+                            <div id="nav-metric-radios">
+                                <FormControlLabel
+                                    value="time"
+                                    control={<Radio color="primary"/>}
+                                    label="Time"
+                                    labelPlacement="start"/>
+                                <FormControlLabel
+                                    value="distance"
+                                    control={<Radio color="primary"/>}
+                                    label="Distance"
+                                    labelPlacement="start"/>
+                            </div>
+                        </RadioGroup>
+                    </div>
+                    <div style={{marginTop: '10px'}}>
+                        <form className='rowC' noValidate autoComplete="off">
+                            <TextField id="outlined-basic" label="Current range (km)"
+                                       value={this.state.current_range}
+                                       onChange={this.currentRangeChange}/>
+                            <div style={{width: '15px'}}></div>
+                            <TextField id="outlined-basic-2" label="Max. range (km)"
+                                       value={this.state.max_range}
+                                       onChange={this.maxRangeChange}/>
+                        </form>
+                    </div>
+                    <div>
+                        <ButtonGroup fullWidth aria-label="split button">
+                            <Button
+                                id='go'
                                 variant="contained"
-                                onClick={this.reset}
-                        >RESET</Button>
-                    </ButtonGroup>
+                                onClick={this.go}>GO</Button>
+                            <Button id='reset'
+                                    variant="contained"
+                                    onClick={this.reset}
+                            >RESET</Button>
+                        </ButtonGroup>
+                    </div>
+                    <div id="travel">
+                        <a>{this.props.state.time} | </a>
+                        <a>{this.props.state.distance}km</a>
+                    </div>
                 </div>
-                <div id="travel">
-                    <a>{this.props.state.time} | </a>
-                    <a>{this.props.state.distance}km</a>
-                </div>
-            </div>
+            </StyledLoader>
         )
             ;
     }
@@ -246,6 +273,7 @@ export default class Navigation extends React.Component {
             toast.error('Current range cannot be bigger than max. range');
             return;
         }
+        this.onCalculating();
         // extract data from state
         const data = {
             start: {
@@ -263,6 +291,7 @@ export default class Navigation extends React.Component {
         };
         // shortest path request with data
         axios.post(BASE_URL + '/shortest-path', data).then(response => {
+            this.onCalculating();
             const path = [];
             const visited_charging_stations = [];
             // extract path
@@ -280,7 +309,10 @@ export default class Navigation extends React.Component {
                 this.round(response.data.distance / 1000),
                 visited_charging_stations
             );
-        }).catch(err => toast.error(err.response.data));
+        }).catch(err => {
+            toast.error(err.response.data);
+            this.onCalculating();
+        });
     };
 
     /**

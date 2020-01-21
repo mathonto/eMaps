@@ -2,9 +2,9 @@ import React from 'react';
 import './App.css';
 import Osm from "../osm";
 import Navigation from "../navigation";
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 import Button from "@material-ui/core/Button";
-import {Collapse} from 'react-collapse';
+import { Collapse } from 'react-collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import EvStationIcon from '@material-ui/icons/EvStation';
@@ -106,33 +106,33 @@ export default class App extends React.Component {
     render() {
         return (
             <div>
-                <Osm state={this.state}
-                     setFrom={this.setFrom}
-                     setTo={this.setTo}/>
-                <div className='rowC'>
-                    {this.state.isOpened && (<Button color="primary" variant="contained"
-                                                     onClick={() => this.changeOpen()}><ExpandLessIcon></ExpandLessIcon></Button>)}
-                    {!this.state.isOpened && (<Button color="primary" variant="contained"
-                                                      onClick={() => this.changeOpen()}><ExpandMoreIcon></ExpandMoreIcon></Button>)}
-                    <div style={{minWidth: '300px'}}>
-                        <Button color="secondary" onClick={() => window.open("https://github.com/mathonto/maps")}
-                                variant="contained">e-Maps<EvStationIcon></EvStationIcon></Button>
+                    <Osm state={this.state}
+                         setFrom={this.setFrom}
+                         setTo={this.setTo}/>
+                    <div className='rowC'>
+                        {this.state.isOpened && (<Button color="primary" variant="contained"
+                                                         onClick={() => this.changeOpen()}><ExpandLessIcon></ExpandLessIcon></Button>)}
+                        {!this.state.isOpened && (<Button color="primary" variant="contained"
+                                                          onClick={() => this.changeOpen()}><ExpandMoreIcon></ExpandMoreIcon></Button>)}
+                        <div style={{minWidth: '300px'}}>
+                            <Button color="secondary" onClick={() => window.open("https://github.com/mathonto/maps")}
+                                    variant="contained">e-Maps<EvStationIcon></EvStationIcon></Button>
+                        </div>
                     </div>
-                </div>
-                <Collapse isOpened={this.state.isOpened}>
-                    <Navigation state={this.state}
-                                setRoute={this.setRoute}
-                                setFrom={this.setFrom}
-                                setTo={this.setTo}
-                                clearMap={this.clearMap}/>
-                </Collapse>
-                <div>
-                    <div style={style}>
-                        Charging Station Icon made by <a
-                        href="https://www.flaticon.com/authors/nhor-phai">nhor-phai</a> from <a
-                        href="www.flaticon.com">www.flaticon.com</a>
+                    <Collapse isOpened={this.state.isOpened}>
+                        <Navigation state={this.state}
+                                    setRoute={this.setRoute}
+                                    setFrom={this.setFrom}
+                                    setTo={this.setTo}
+                                    clearMap={this.clearMap}/>
+                    </Collapse>
+                    <div>
+                        <div style={style}>
+                            Charging Station Icon made by <a
+                            href="https://www.flaticon.com/authors/nhor-phai">nhor-phai</a> from <a
+                            href="www.flaticon.com">www.flaticon.com</a>
+                        </div>
                     </div>
-                </div>
             </div>
         );
     }
