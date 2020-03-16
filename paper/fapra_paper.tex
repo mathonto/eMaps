@@ -101,7 +101,7 @@ The main functionality of this project is a route planner that considers the cur
 Figure \ref{fig:input} depicts the modal where the user can enter the current and maximum range of the electric vehicle used for travelling.
 Once a start and target location is chosen, the user can submit the request for route planning including the parameters of current and maximum range to the Backend.
 Initially, in the Backend, a shortest path calculation is started from start to target.
-The pseudo code depicted in TODO simplifies the processing of the Backend once receiving such a request.\par\bigskip
+The pseudo code depicted in Algorithm \ref{alg:route} simplifies the processing of the Backend once receiving such a request.\par\bigskip
 \begin{algorithm}[H]
  \KwData{start coordinates, target coordinates, current range, maximum range}
  \KwResult{route}
@@ -125,6 +125,7 @@ required range $\leftarrow$ route.distance\;
  }
  \Return{route}
  \caption{Simplified route calculation}
+ \label{alg:route}
 \end{algorithm}\par\bigskip
 jahskdjashdkjsahdksahdkahdkajshdkaj
 jahskdjashdkjsahdksahdkahdkajshdkaj
@@ -153,8 +154,9 @@ closest distance from goal $\leftarrow$ max\;
  }
  \Return{chosen charging station}
  \caption{Simplified charging station coordinates calculation}
+ \label{alg:charg}
 \end{algorithm}
-
+Algorithm \ref{alg:charg} depicts pseudocode how charging station coordinates are determined based on current range, start and target location.
 \section{Conclusion and Future Work}
 \bibliographystyle{alpha}
 \bibliography{ref}
