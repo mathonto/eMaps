@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  16 MAR 2020 17:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  16 MAR 2020 17:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -354,8 +354,15 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 34.
 
+LaTeX Warning: Citation `Artmeier2010_Optimal' on page 1 undefined on input lin
+e 29.
+
+
+LaTeX Warning: Citation `Artmeier2010_Optimal' on page 1 undefined on input lin
+e 31.
+
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 34.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
@@ -410,15 +417,18 @@ Overfull \hbox (11.32755pt too wide) in paragraph at lines 129--137
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
  4623 strings out of 492649
  66448 string characters out of 6129622
- 166551 words of memory out of 5000000
+ 166542 words of memory out of 5000000
  8403 multiletter control sequences out of 15000+600000
  19199 words of font info for 44 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,13n,25p,358b,393s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,16n,25p,358b,393s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
 </usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
 /usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
@@ -436,7 +446,7 @@ e/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/
 /texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2018/t
 exmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/2018/tex
 mf-dist/fonts/type1/public/cm-super/sftt0800.pfb>
-Output written on fapra_paper.pdf (5 pages, 4643255 bytes).
+Output written on fapra_paper.pdf (5 pages, 4643284 bytes).
 PDF statistics:
  100 PDF objects out of 1000 (max. 8388607)
  69 compressed objects within 1 object stream

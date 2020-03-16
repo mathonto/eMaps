@@ -141,13 +141,14 @@ jahskdjashdkjsahdksahdkahdkajshdkaj\par\bigskip
 closest distance from start $\leftarrow$ 0\;
 closest distance from goal $\leftarrow$ max\;
  \For{charging station \textbf{in} charging stations}{
- \If{charging station \textbf{contains} transportation mode}
+ \If{charging station \textbf{contains} transportation mode}{
  temp distance from start $\leftarrow$ distance(start coordinates, charging station)\;
  temp distance to goal $\leftarrow$ distance (goal coordinates, charging station)\;
  \If{temp distance from start * 1.5 < current range \textbf{And} temp distance from start < global distance from start \textbf{And} temp distance to goal < global distance to goal}{
   global distance from start $\leftarrow$ temp distance from start\;
   global distance to goal $\leftarrow$ temp distance to goal\;
   chosen charging station coordinates $\leftarrow$ charging station
+ }
  }
  }
  \Return{chosen charging station}
