@@ -101,8 +101,7 @@ The main functionality of this project is a route planner that considers the cur
 Figure \ref{fig:input} depicts the modal where the user can enter the current and maximum range of the electric vehicle used for travelling.
 Once a start and target location is chosen, the user can submit the request for route planning including the parameters of current and maximum range to the Backend.
 Initially, in the Backend, a shortest path calculation is started from start to target.
-The pseudo code depicted in TODO simplifies the processing of the Backend once receiving such a request.\\
-
+The pseudo code depicted in TODO simplifies the processing of the Backend once receiving such a request.\par\bigskip
 \begin{algorithm}[H]
  \KwData{start coordinates, target coordinates, current range, maximum range}
  \KwResult{route}
@@ -125,7 +124,7 @@ required range $\leftarrow$ route.distance\;
    }
  }
  \Return{route}
- \caption{Simplified route calulation}
+ \caption{Simplified route calculation}
 \end{algorithm}\par\bigskip
 jahskdjashdkjsahdksahdkahdkajshdkaj
 jahskdjashdkjsahdksahdkahdkajshdkaj
@@ -137,29 +136,24 @@ jahskdjashdkjsahdksahdkahdkajshdkaj
 jahskdjashdkjsahdksahdkahdkajshdkaj
 jahskdjashdkjsahdksahdkahdkajshdkaj\par\bigskip
 \begin{algorithm}[H]
- \KwData{start coordinates, target coordinates, current range}
- \KwResult{charging station coordinates}
-route $\leftarrow$  shortest path(start coordinates, target coordinates)\;
-required range $\leftarrow$ route.distance\;
- \While{required range > current range}{
- route $\rightarrow$ null\;
- charging station coordinates $\leftarrow$ find optimal charging station coordinates\;
- route to charging $\leftarrow$ shortest path(start coordinates, charging station coordinates)\;
- route $\leftarrow$ route + route to charging\;
- 
- current range $\leftarrow$ maximum range\;
- start coordinates $\leftarrow$ charging station coordinates\;
- 
- route to target $\leftarrow$ shortest path(start coordinates, target coordinates)\;
- required range $\leftarrow$ route to target.distance\;
- 
-  \If{route to target.distance < current range}{
-    route $\leftarrow$ full route + route to target\;
-   }
+ \KwData{start coordinates, target coordinates, current range, transportation mode}
+ \KwResult{chosen chargign station}
+closest distance from start $\leftarrow$ 0\;
+closest distance from goal $\leftarrow$ max\;
+ \For{charging station \textbf{in} charging stations}{
+ \If{charging station \textbf{contains} transportation mode}
+ temp distance from start $\leftarrow$ distance(start coordinates, charging station)\;
+ temp distance to goal $\leftarrow$ distance (goal coordinates, charging station)\;
+ \If{temp distance from start * 1.5 < current range \textbf{And} temp distance from start < global distance from start \textbf{And} temp distance to goal < global distance to goal}{
+  global distance from start $\leftarrow$ temp distance from start\;
+  global distance to goal $\leftarrow$ temp distance to goal\;
+  chosen charging station coordinates $\leftarrow$ charging station
  }
- \Return{charging station coordinates}
+ }
+ \Return{chosen charging station}
  \caption{Simplified charging station coordinates calculation}
 \end{algorithm}
+
 \section{Conclusion and Future Work}
 \bibliographystyle{alpha}
 \bibliography{ref}
