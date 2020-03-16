@@ -28,8 +28,9 @@ Subsequent runs will only load the precomputed binary.
 
 ## Usage
 
-1. Select transportation (car/bike/walk)
+1. Select transportation (car/bike)
 2. Select shortest path by travel time or travel distance
+3. Enter current range and maximum range (fully charged) of your e-Vehicle 
 3. Set start and goal via the search box or by left-clicking on map
 4. Click "Go"
 5. If a new route should be computed, click "Reset" or right-click on the map to reset
