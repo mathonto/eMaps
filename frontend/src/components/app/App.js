@@ -115,7 +115,7 @@ export default class App extends React.Component {
                         {!this.state.isOpened && (<Button color="primary" variant="contained"
                                                           onClick={() => this.changeOpen()}><ExpandMoreIcon></ExpandMoreIcon></Button>)}
                         <div style={{minWidth: '300px'}}>
-                            <Button color="secondary" onClick={() => window.open("https://github.com/mathonto/maps")}
+                            <Button color="secondary" onClick={() => window.open("https://github.com/mathonto/eMaps")}
                                     variant="contained">e-Maps<EvStationIcon></EvStationIcon></Button>
                         </div>
                     </div>
