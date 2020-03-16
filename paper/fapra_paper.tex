@@ -163,7 +163,8 @@ closest distance from goal $\leftarrow$ max\;
  \caption{Simplified charging station coordinates calculation}
  \label{alg:charg}
 \end{algorithm}\par\bigskip
-Figure \ref{fig:success} shows the Frontend with a successfully calculated route with charging stations.\\
+Figure \ref{fig:success} shows the Frontend with a successfully calculated route with charging stations.
+The visited charging stations are highlighted for the user as visible in the Figure \ref{fig:success}. \\
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.25]{figures/success}
@@ -179,7 +180,8 @@ To achieve a better routing for electric vehicles in terms of energy efficiency,
 Worley et al. \cite{Worley2012} presented a model that addresses the problem of locating charging stations and calculate routes for electric vehicles based on discrete integer programming optimization and the traditional Vehicle Routing Problem \cite{Worley2012}.
 This model could also be used as an orientation to optimize the implementation of choosing a charging stations on the route once required.
 \section{Conclusion}
-This project 
+This project demonstrated the use and suitability of OpenStreetMap road network and amenity data to perform route planning for electric vehicles.
+The implemented application is a route planner that considers the limited cruising range of electric vehicles, as well as the availability of charging stations along the route.
 \bibliographystyle{alpha}
 \bibliography{ref}
 \end{document}
