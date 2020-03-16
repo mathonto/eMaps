@@ -34,7 +34,7 @@ export default class App extends React.Component {
             time: '0h 0min',
             distance: 0,
             chargingMarkers: [],
-            isOpened: false
+            isOpened: true
         };
 
         document.oncontextmenu = () => {
