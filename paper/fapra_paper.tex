@@ -1,0 +1,43 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+%% argmin command
+\DeclareMathOperator*{\argmin}{arg\,min}
+\usepackage{graphicx}
+\usepackage{url}
+\author{Tobias Mathony}
+\title{Fachpraktikum Algorithms on OpenStreetMap Data: eMaps}
+\date{\today}
+\begin{document}
+\maketitle
+\begin{abstract}
+Electric vehicles, such as eBikes or eCars, play an important role in today's
+\end{abstract}
+\section{Introduction}
+Climate change and its consequences heavily impacted the engineering of means of transport.
+As a result, vehicles powered by electric batteries emerged, such as electrically-powered cars, bikes or scooters.
+By using regenerative energy sources, electrically-powered vehicles have the potential to significantly reduce the dependency of fossil fuel reserves \cite{Artmeier2010_Optimal}.
+Furthermore, electric vehicles emit no emissions, hence, being more eco-friendly than vehicles running on gasoline.
+However, electric vehicles have characteristics that currently hinder its wide-spread adaption, i.e. (i) limited cruising range, and (ii) long recharge times\cite{Artmeier2010_Optimal}.
+Especially the limited cruising range require an adaption of existing navigation and routing systems.
+We need to determine routes for electric vehicles considering the availability of charging stations and the range of electric vehicles to avoid running out of power.\par\medskip
+Using OpenStreetMap\footnote{\url{https://www.openstreetmap.org}} data, we demonstrate the implementation of a route planner based on the range of an electric vehicle and the availability of charging stations. 
+\section{Key concepts}
+\subsection{OpenStreetMap}
+\subsection{Dijkstra}
+\section{Implementation}
+\subsection{Architecture and Technologies}
+\subsection{Features}
+\section{Conclusion and Future Work}
+\bibliographystyle{alpha}
+\bibliography{ref}
+\end{document}
