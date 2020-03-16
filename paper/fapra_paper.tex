@@ -126,6 +126,39 @@ required range $\leftarrow$ route.distance\;
  }
  \Return{route}
  \caption{Simplified route calulation}
+\end{algorithm}\par\bigskip
+jahskdjashdkjsahdksahdkahdkajshdkaj
+jahskdjashdkjsahdksahdkahdkajshdkaj
+jahskdjashdkjsahdksahdkahdkajshdkaj\\
+jahskdjashdkjsahdksahdkahdkajshdkaj
+jahskdjashdkjsahdksahdkahdkajshdkaj\\
+jahskdjashdkjsahdksahdkahdkajshdkaj\\
+jahskdjashdkjsahdksahdkahdkajshdkaj
+jahskdjashdkjsahdksahdkahdkajshdkaj
+jahskdjashdkjsahdksahdkahdkajshdkaj\par\bigskip
+\begin{algorithm}[H]
+ \KwData{start coordinates, target coordinates, current range}
+ \KwResult{charging station coordinates}
+route $\leftarrow$  shortest path(start coordinates, target coordinates)\;
+required range $\leftarrow$ route.distance\;
+ \While{required range > current range}{
+ route $\rightarrow$ null\;
+ charging station coordinates $\leftarrow$ find optimal charging station coordinates\;
+ route to charging $\leftarrow$ shortest path(start coordinates, charging station coordinates)\;
+ route $\leftarrow$ route + route to charging\;
+ 
+ current range $\leftarrow$ maximum range\;
+ start coordinates $\leftarrow$ charging station coordinates\;
+ 
+ route to target $\leftarrow$ shortest path(start coordinates, target coordinates)\;
+ required range $\leftarrow$ route to target.distance\;
+ 
+  \If{route to target.distance < current range}{
+    route $\leftarrow$ full route + route to target\;
+   }
+ }
+ \Return{charging station coordinates}
+ \caption{Simplified charging station coordinates calculation}
 \end{algorithm}
 \section{Conclusion and Future Work}
 \bibliographystyle{alpha}
