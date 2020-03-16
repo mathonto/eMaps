@@ -33,7 +33,7 @@ impl Graph {
     Create new graph.
     *
     @param nodes: parsed nodes
-    @param offsets:
+    @param offsets: offset array for nodes
     @param edges: parsed edges
     @param charging_nodes: charging station nodes
     *
