@@ -60,6 +60,11 @@ export default class Navigation extends React.Component {
         };
     }
 
+    /**
+     * This function renders the html code for the suggestion.
+     * @param suggestion: name of the suggestion
+     * @returns {*}
+     */
     renderSuggestion = suggestion => (
         <div>
             <Divider/>
@@ -113,6 +118,9 @@ export default class Navigation extends React.Component {
         });
     };
 
+    /**
+     * Called when calculation is started to display loading screen.
+     */
     onCalculating = () => {
         this.setState({
             isCalculating: !this.state.isCalculating
