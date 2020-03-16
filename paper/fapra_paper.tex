@@ -105,10 +105,9 @@ The pseudo code depicted in Algorithm \ref{alg:route} simplifies the processing 
 \begin{algorithm}[H]
  \KwData{start coordinates, target coordinates, current range, maximum range}
  \KwResult{route}
-route $\leftarrow$  shortest path(start coordinates, target coordinates)\;
+naive route $\leftarrow$  shortest path(start coordinates, target coordinates)\;
 required range $\leftarrow$ route.distance\;
  \While{required range > current range}{
- route $\rightarrow$ null\;
  charging station coordinates $\leftarrow$ find optimal charging station coordinates\;
  route to charging $\leftarrow$ shortest path(start coordinates, charging station coordinates)\;
  route $\leftarrow$ route + route to charging\;
@@ -120,10 +119,11 @@ required range $\leftarrow$ route.distance\;
  required range $\leftarrow$ route to target.distance\;
  
   \If{route to target.distance < current range}{
-    route $\leftarrow$ full route + route to target\;
+    route $\leftarrow$ route + route to target\;
+     \Return{route}
    }
  }
- \Return{route}
+ \Return{naive route}
  \caption{Simplified route calculation}
  \label{alg:route}
 \end{algorithm}\par\bigskip
@@ -135,6 +135,10 @@ If this is the case, we calculate the haversine distance to the current charging
 Then, we check if the charging station is reachable from our start location with the current range, and compare both distances with the global minimum, respectively maximum. 
 Our goal is to calculate the charging station which is the farthest away from the start and the closest to the target, i.e. we want to utilize the current range as far as it is possible and get a charging station which is as close to the target location as the current range allows.
 Once we determined the charging station coordinates, we calculate the shortest path from the start location to the chosen charging station location.
+Then, we set our current range as maximum range, since we assume that we charged our electric vehicle fully.
+Then, we set the charging station location as new start and calculate the shortest path again from our new start to the target location.
+We update the required range to the distance to the target from the lastly used charging station.
+While the required range is still bigger than our current range, we calculate routes between charging stations based on start and target, until we are able to reach the target.
 \par\bigskip
 \begin{algorithm}[H]
  \KwData{start coordinates, target coordinates, current range, transportation mode}
