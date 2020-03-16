@@ -30,11 +30,9 @@ Furthermore, electric vehicles emit no emissions, hence, being more eco-friendly
 However, electric vehicles have characteristics that currently hinder its wide-spread adaption, i.e. (i) limited cruising range, and (ii) long recharge times\cite{Artmeier2010_Optimal}.
 Especially the limited cruising range require an adaption of existing navigation and routing systems.
 We need to determine routes for electric vehicles considering the availability of charging stations and the range of electric vehicles to avoid running out of power.\par\medskip
-Using OpenStreetMap\footnote{\url{https://www.openstreetmap.org}} data, we demonstrate the implementation of a route planner based on the range of an electric vehicle and the availability of charging stations. 
-\section{Foundations}
-This section briefly describes the foundations of the implementation such as OpenStreetMap and Dijkstra.
-\subsection{OpenStreetMap}
-This project was implemented on OpenStreetMap data.
+Using OpenStreetMap\footnote{\url{https://www.openstreetmap.org}} data, we demonstrate the implementation of a route planner that considers the range of an electric vehicle and the availability of charging stations. 
+\section{OpenStreetMap}
+This project is implemented on OpenStreetMap data.
 OpenStreetMap (OSM) is a community-driven open-source project that provides user-generated map data \cite{Haklay2008}.
 Besides that, also further geographical information like charging stations, bars, clubs or restaurants are available.
 OpenStreetMap data is available in different formats with parsers for the most popular programming languages.\par\medskip
@@ -52,7 +50,7 @@ For the architecture of the application, the common \textbf{Model-View-Controlle
 The \textbf{Resources} represent the raw OpenStreetMap data which was provided in the \textit{Protocolbuffer Binary Format (PBF)}\footnote{\url{https://wiki.openstreetmap.org/wiki/PBF_Format}}.\par\medskip
 The \textbf{Backend} provides the core functionality and implements algorithms on the OpenStreetMap data.
 It is implemented as Web Server in \textit{Rust}\footnote{\url{https://www.rust-lang.org}}.
-The core functionality of the Backend includes (i) a parser to map the OpenStreetMap data to a \textit{Domain Object Model} (DOM) from Rust,
+The core functionality of the Backend includes (i) a parser to map the OpenStreetMap data to a \textit{Domain Object Model} (DOM) representation in Rust,
 (ii) a shortest path algorithm, and (iii) an \textit{Application Programming Interface} (API) to expose the functionality for access from the \textbf{Frontend}.\par\medskip
 The Frontend is built using the \textit{React}\footnote{\url{https://reactjs.org}} Web Framework and \textit{Leaflet}\footnote{\url{https://leafletjs.com}}. Leaflet is an open-source JavaScript library for interactive maps based on OpenStreetMap.
 Leaflet is used to provide a user-friendly map and allows to e.g. set markers or draw routes.
@@ -65,7 +63,30 @@ The Frontend interacts with the Backend via \textit{HTTP} requests.
     \caption{Screenshot of the Frontend}
     \label{fig:base_ui}
 \end{figure}
-\subsection{Features}
+\subsection{Graph}
+The Backend parses the graph data from OpenStreetMap in the PBF format.
+This allows to map the graph data from a PBF file, e.g. the road network graph of Germany, to a DOM representation in Rust.
+However, only necessary data is parsed from the PBF file for performance and efficiency reasons.
+We focus on \textit{ways}, \textit{nodes}, and \textit{amenities} in OpenStreetMap. A node in OpenStreetMap is a single geographical data point with latitude and longitude. A way is a combination of multiple nodes building a sequence, e.g. a street.
+Amenities are arbitrary geographical POIs, e.g. a restaurant, a bar, or a charging station.
+Amenities are stored as Key-Value-Pairs in OpenStreetMap, e.g. $\lbrace amenity: charging\_station \rbrace$.
+The implementation of this route planner focuses on electric cars and electric bikes, hence we only parse ways where cars and bikes are allowed to drive on.
+Furthermore, we parse charging stations from the amenities to be able to consider those later on when calculating a route.\par\medskip
+Our graph is structured as follows: $G = \lbrace N, E, O, C, CN \rbrace$ with (i) $N$ being a set of nodes, (ii) $W$ being a set of edges, (iii) $O$ being a offset array, (iv) $C$ being a cell hashmap and $CN$ being a set of nodes that represent a charging station.
+The offset array is used to efficiently access the edges of a node. The cell hashmap is used to create a grid layer above the graph to speed up the search of the nearest node in the graph for coordinates.
+While creating the graph, every node is hashed into a grid cell using the predecimal digits of latitude and longitude of its coordinates.
+When the user requests a shortest path calculation from the Frontend, arbitrary start and target locations may be passed, however since we only parsed ways that are valid for cars and bikes, we may need to locate the nearest node in our graph to the start and target location as passed by the user.
+Let us assume we want to locate the nearest node in our graph for a node called $n$.
+First, we locate $n$ in the grid by using the predecimal digits of its coordinates. 
+Then, we calculate the distance of all nodes in the cell to $n$ and choose the node with the smallest distance to $n$.
+Since the nearest node to $n$ may be in another cell, we also check neighboring cells.\\
+To extract charging stations from OpenStreetMap, we check for each node if a Key-Value-Pair $\lbrace amenity: charging\_station \rbrace$ exists, i.e. if the node is tagged as charging station in OpenStreetMap.
+Besides that, OpenStreetMap data also provides information about the vehicles that can be charged at a charging station.
+However, since OpenStreetMap is community-driven and based on user-generated data, not all charging stations contain information about the vehicles that can be charged.
+Thus, for charging stations without further information, we just assume that both cars and bikes can be charged.
+Hence, a charging station in our graph model contains coordinates, an enum indicating the vehicles that can be charged, and an identifier.
+\subsection{Routing}
+\subsection{Routing for Electric Vehicles}
 \section{Conclusion and Future Work}
 \bibliographystyle{alpha}
 \bibliography{ref}
