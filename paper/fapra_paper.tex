@@ -127,15 +127,15 @@ required range $\leftarrow$ route.distance\;
  \caption{Simplified route calculation}
  \label{alg:route}
 \end{algorithm}\par\bigskip
-jahskdjashdkjsahdksahdkahdkajshdkaj
-jahskdjashdkjsahdksahdkahdkajshdkaj
-jahskdjashdkjsahdksahdkahdkajshdkaj\\
-jahskdjashdkjsahdksahdkahdkajshdkaj
-jahskdjashdkjsahdksahdkahdkajshdkaj\\
-jahskdjashdkjsahdksahdkahdkajshdkaj\\
-jahskdjashdkjsahdksahdkahdkajshdkaj
-jahskdjashdkjsahdksahdkahdkajshdkaj
-jahskdjashdkjsahdksahdkahdkajshdkaj\par\bigskip
+At first, we just calculate a shortest path based on start and target parameters, to check if the current range of our electric vehicle is sufficient.
+If it is not sufficient, we reset the route and calculate the optimal charging station coordinates based on the start and target location, as well as the current range and our means of transportation, i.e. car or bike.
+This calculation is depicted in Algorithm \ref{alg:charg}. 
+For this, we iterate over all charging stations and check as a pre-condition if the current charging station supports our means of transportation.
+If this is the case, we calculate the haversine distance to the current charging station from respectively the start and target location.
+Then, we check if the charging station is reachable from our start location with the current range, and compare both distances with the global minimum, respectively maximum. 
+Our goal is to calculate the charging station which is the farthest away from the start and the closest to the target, i.e. we want to utilize the current range as far as it is possible and get a charging station which is as close to the target location as the current range allows.
+Once we determined the charging station coordinates, we calculate the shortest path from the start location to the chosen charging station location.
+\par\bigskip
 \begin{algorithm}[H]
  \KwData{start coordinates, target coordinates, current range, transportation mode}
  \KwResult{chosen charging station}
@@ -145,7 +145,7 @@ closest distance from goal $\leftarrow$ max\;
  \If{charging station \textbf{contains} transportation mode}{
  temp distance from start $\leftarrow$ distance(start coordinates, charging station)\;
  temp distance to goal $\leftarrow$ distance (goal coordinates, charging station)\;
- \If{temp distance from start * 1.5 < current range \textbf{And} temp distance from start < global distance from start \textbf{And} temp distance to goal < global distance to goal}{
+ \If{temp distance from start < current range \textbf{And} temp distance from start > global distance from start \textbf{And} temp distance to goal < global distance to goal}{
   global distance from start $\leftarrow$ temp distance from start\;
   global distance to goal $\leftarrow$ temp distance to goal\;
   chosen charging station coordinates $\leftarrow$ charging station
@@ -156,7 +156,6 @@ closest distance from goal $\leftarrow$ max\;
  \caption{Simplified charging station coordinates calculation}
  \label{alg:charg}
 \end{algorithm}
-Algorithm \ref{alg:charg} depicts pseudocode how charging station coordinates are determined based on current range, start and target location.
 \section{Conclusion and Future Work}
 \bibliographystyle{alpha}
 \bibliography{ref}
