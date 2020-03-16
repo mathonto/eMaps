@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  16 MAR 2020 17:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  16 MAR 2020 19:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -354,62 +354,80 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 34.
 
+LaTeX Warning: Citation `Artmeier2010_Optimal' on page 1 undefined on input lin
+e 32.
+
+
+LaTeX Warning: Citation `Artmeier2010_Optimal' on page 1 undefined on input lin
+e 34.
+
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 37.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-
-LaTeX Warning: Citation `Haklay2008' on page 1 undefined on input line 37.
-
 <figures/arch.pdf, id=1, 88.41031pt x 175.61609pt>
 File: figures/arch.pdf Graphic file (type pdf)
 <use figures/arch.pdf>
-Package pdftex.def Info: figures/arch.pdf  used on input line 45.
+Package pdftex.def Info: figures/arch.pdf  used on input line 48.
 (pdftex.def)             Requested size: 88.41008pt x 175.61566pt.
+ [1
 
-Overfull \hbox (1.30222pt too wide) in paragraph at lines 52--55
+{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (1.30222pt too wide) in paragraph at lines 55--58
 []\T1/cmr/m/n/10 The \T1/cmr/bx/n/10 Back-end \T1/cmr/m/n/10 pro-vides the core
  func-tion-al-ity and im-ple-ments al-go-rithms on the Open-StreetMap
  []
 
-[1
-
-{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<figures/base_ui.png, id=19, 1442.38875pt x 730.73pt>
+<figures/base_ui.png, id=18, 1442.38875pt x 730.73pt>
 File: figures/base_ui.png Graphic file (type png)
 <use figures/base_ui.png>
-Package pdftex.def Info: figures/base_ui.png  used on input line 63.
+Package pdftex.def Info: figures/base_ui.png  used on input line 66.
 (pdftex.def)             Requested size: 432.71997pt x 219.22069pt.
 
-Overfull \hbox (5.92862pt too wide) in paragraph at lines 63--64
+Overfull \hbox (5.92862pt too wide) in paragraph at lines 66--67
  [][] 
  []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 [2 <./figures/arch.pdf
 
 pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./figures/arch.pdf): PDF inc
 lusion: invalid other resource which is no dict (key 'ProcSets', type <array>);
  ignored.
-> <./figures/base_ui.png>]
-
-LaTeX Warning: Citation `Dijkstra1959' on page 3 undefined on input line 90.
-
-<figures/input.png, id=34, 388.45125pt x 390.45876pt>
+>]
+<figures/input.png, id=36, 388.45125pt x 390.45876pt>
 File: figures/input.png Graphic file (type png)
 <use figures/input.png>
-Package pdftex.def Info: figures/input.png  used on input line 97.
-(pdftex.def)             Requested size: 116.53627pt x 117.13852pt.
-[3 <./figures/input.png>] [4] (./fapra_paper.bbl) [5] (./fapra_paper.aux)
+Package pdftex.def Info: figures/input.png  used on input line 100.
+(pdftex.def)             Requested size: 233.07254pt x 234.27705pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[3 <./figures/base_ui.png>] [4 <./figures/input.png>]
+<figures/success.png, id=45, 1804.7425pt x 982.67125pt>
+File: figures/success.png Graphic file (type png)
+<use figures/success.png>
+Package pdftex.def Info: figures/success.png  used on input line 169.
+(pdftex.def)             Requested size: 451.18452pt x 245.6672pt.
+
+Overfull \hbox (24.39317pt too wide) in paragraph at lines 169--170
+ [][] 
+ []
+
+(./fapra_paper.bbl [5 <./figures/success.png>]) [6] (./fapra_paper.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 4625 strings out of 492649
- 66470 string characters out of 6129622
- 166567 words of memory out of 5000000
- 8405 multiletter control sequences out of 15000+600000
+ 4632 strings out of 492649
+ 66593 string characters out of 6129622
+ 169581 words of memory out of 5000000
+ 8411 multiletter control sequences out of 15000+600000
  19199 words of font info for 44 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  41i,16n,25p,358b,393s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -430,10 +448,10 @@ e/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/
 /texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2018/t
 exmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/2018/tex
 mf-dist/fonts/type1/public/cm-super/sftt0800.pfb>
-Output written on fapra_paper.pdf (5 pages, 4643993 bytes).
+Output written on fapra_paper.pdf (6 pages, 7135445 bytes).
 PDF statistics:
- 100 PDF objects out of 1000 (max. 8388607)
- 69 compressed objects within 1 object stream
+ 105 PDF objects out of 1000 (max. 8388607)
+ 71 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

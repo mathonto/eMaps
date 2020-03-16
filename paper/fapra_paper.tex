@@ -21,7 +21,10 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Electric vehicles, such as eBikes or eCars, play an important role in today's
+Electrically-powered vehicles, such as e-Bikes or e-Cars, play an important role in today's fight against climate change.
+Contrary to traditional vehicles, such as cars running on gasoline, electrical vehicles have unique characteristics like a limited cruising range, and long recharge times.
+To ensure that such vehicles never run out of power, adaptions to navigation and route planners are required.
+This project explains the implementation of a route planner that considers the limited cruising range of electric vehicles, as well as the availability of charging stations in the road network, based on OpenStreetMap data. 
 \end{abstract}
 \section{Introduction}
 Climate change and its consequences heavily impacted the engineering of means of transport.
@@ -94,7 +97,7 @@ TODO: explain distance/time
 The main functionality of this project is a route planner that considers the current and maximum range of electric vehicles, as well as charging stations to determine a route where an electric vehicle never runs out of battery.
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.3]{figures/input}
+    \includegraphics[scale=0.6]{figures/input}
     \caption{Modal for the user to e.g. enter current and maximum range}
     \label{fig:input}
 \end{figure}
@@ -159,7 +162,14 @@ closest distance from goal $\leftarrow$ max\;
  \Return{chosen charging station}
  \caption{Simplified charging station coordinates calculation}
  \label{alg:charg}
-\end{algorithm}
+\end{algorithm}\par\bigskip
+Figure \ref{fig:success} shows the Frontend with a successfully calculated route with charging stations.\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.25]{figures/success}
+    \caption{Successfully calculation of route with charging stations}
+    \label{fig:success}
+\end{figure}
 \section{Conclusion and Future Work}
 \bibliographystyle{alpha}
 \bibliography{ref}

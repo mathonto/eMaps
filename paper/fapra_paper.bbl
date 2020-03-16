@@ -1,11 +1,13 @@
-\begin{thebibliography}{AHLS10}
+\begin{thebibliography}{HW08}
 
-\bibitem[AHLS10]{Artmeier2010_Optimal}
-Andreas Artmeier, Julian Haselmayr, Martin Leucker, and Martin Sachenbacher.
-\newblock The shortest path problem revisited: Optimal routing for electric
-  vehicles.
-\newblock In R{\"u}diger Dillmann, J{\"u}rgen Beyerer, Uwe~D. Hanebeck, and
-  Tanja Schultz, editors, {\em KI 2010: Advances in Artificial Intelligence},
-  pages 309--316, Berlin, Heidelberg, 2010. Springer Berlin Heidelberg.
+\bibitem[Dij59]{Dijkstra1959}
+Edsger~W Dijkstra.
+\newblock A note on two problems in connexion with graphs.
+\newblock {\em Numerische mathematik}, 1(1):269--271, 1959.
+
+\bibitem[HW08]{Haklay2008}
+M.~{Haklay} and P.~{Weber}.
+\newblock Openstreetmap: User-generated street maps.
+\newblock {\em IEEE Pervasive Computing}, 7(4):12--18, Oct 2008.
 
 \end{thebibliography}
