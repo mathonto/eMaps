@@ -1,4 +1,12 @@
-\begin{thebibliography}{HW08}
+\begin{thebibliography}{AHLS10}
+
+\bibitem[AHLS10]{Artmeier2010}
+Andreas Artmeier, Julian Haselmayr, Martin Leucker, and Martin Sachenbacher.
+\newblock The shortest path problem revisited: Optimal routing for electric
+  vehicles.
+\newblock In R{\"u}diger Dillmann, J{\"u}rgen Beyerer, Uwe~D. Hanebeck, and
+  Tanja Schultz, editors, {\em KI 2010: Advances in Artificial Intelligence},
+  pages 309--316, Berlin, Heidelberg, 2010. Springer Berlin Heidelberg.
 
 \bibitem[Dij59]{Dijkstra1959}
 Edsger~W Dijkstra.
@@ -9,5 +17,12 @@ Edsger~W Dijkstra.
 M.~{Haklay} and P.~{Weber}.
 \newblock Openstreetmap: User-generated street maps.
 \newblock {\em IEEE Pervasive Computing}, 7(4):12--18, Oct 2008.
+
+\bibitem[WKS12]{Worley2012}
+O.~{Worley}, D.~{Klabjan}, and T.~M. {Sweda}.
+\newblock Simultaneous vehicle routing and charging station siting for
+  commercial electric vehicles.
+\newblock In {\em 2012 IEEE International Electric Vehicle Conference}, pages
+  1--3, March 2012.
 
 \end{thebibliography}

@@ -29,9 +29,9 @@ This project explains the implementation of a route planner that considers the l
 \section{Introduction}
 Climate change and its consequences heavily impacted the engineering of means of transport.
 As a result, vehicles powered by electric batteries emerged, such as electrically-powered cars, bikes or scooters.
-By using regenerative energy sources, electrically-powered vehicles have the potential to significantly reduce the dependency of fossil fuel reserves \cite{Artmeier2010_Optimal}.
+By using regenerative energy sources, electrically-powered vehicles have the potential to significantly reduce the dependency of fossil fuel reserves \cite{Artmeier2010}.
 Furthermore, electric vehicles emit no emissions, hence, being more eco-friendly than vehicles running on gasoline.
-However, electric vehicles have characteristics that currently hinder its wide-spread adaption, i.e. (i) limited cruising range, and (ii) long recharge times\cite{Artmeier2010_Optimal}.
+However, electric vehicles have characteristics that currently hinder its wide-spread adaption, i.e. (i) limited cruising range, and (ii) long recharge times\cite{Artmeier2010}.
 Especially the limited cruising range require an adaption of existing navigation and routing systems.
 We need to determine routes for electric vehicles considering the availability of charging stations and the range of electric vehicles to avoid running out of power.\par\medskip
 Using OpenStreetMap\footnote{\url{https://www.openstreetmap.org}} data, we demonstrate the implementation of a route planner that considers the range of an electric vehicle and the availability of charging stations. 
@@ -170,7 +170,16 @@ Figure \ref{fig:success} shows the Frontend with a successfully calculated route
     \caption{Successfully calculation of route with charging stations}
     \label{fig:success}
 \end{figure}
-\section{Conclusion and Future Work}
+\subsection{Limitations and Future Work}
+Since this project was within the scope of the lecture \textit{Fachpraktikum Algorithms on OpenStreetMap Data} the time spent on the concept and implementation was limited.
+Hence, the route calculation with charging stations may not be optimal, as well as determining the charging stations on the route since they follow a rather naive approach.
+Furthermore, considering the elevation profile of the road network might help to determine more energy efficient routes for electric vehicles, i.e. routes that go downhill or have a low elevation in general.\par\medskip
+For example, Artmeier et al. \cite{Artmeier2010} proposed an extension to general shortest-path algorithms that address the problem of energy-optimal routing by extending a graph with a weight function representing the energy consumption \cite{Artmeier2010}.
+To achieve a better routing for electric vehicles in terms of energy efficiency, a similar approach could be implemented on top of this project.\par\medskip
+Worley et al. \cite{Worley2012} presented a model that addresses the problem of locating charging stations and calculate routes for electric vehicles based on discrete integer programming optimization and the traditional Vehicle Routing Problem \cite{Worley2012}.
+This model could also be used as an orientation to optimize the implementation of choosing a charging stations on the route once required.
+\section{Conclusion}
+This project 
 \bibliographystyle{alpha}
 \bibliography{ref}
 \end{document}
