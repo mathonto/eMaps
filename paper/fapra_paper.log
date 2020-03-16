@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  16 MAR 2020 12:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  16 MAR 2020 13:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -304,34 +304,70 @@ LaTeX Font Info:    Try loading font information for T1+cmtt on input line 33.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-(./fapra_paper.bbl) [1
 
-{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./fapr
-a_paper.aux) ) 
+LaTeX Warning: Citation `Haklay2008' on page 1 undefined on input line 38.
+
+<figures/arch.pdf, id=1, 88.41031pt x 175.61609pt>
+File: figures/arch.pdf Graphic file (type pdf)
+<use figures/arch.pdf>
+Package pdftex.def Info: figures/arch.pdf  used on input line 46.
+(pdftex.def)             Requested size: 88.41008pt x 175.61566pt.
+[1
+
+{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (1.30222pt too wide) in paragraph at lines 53--56
+[]\T1/cmr/m/n/10 The \T1/cmr/bx/n/10 Back-end \T1/cmr/m/n/10 pro-vides the core
+ func-tion-al-ity and im-ple-ments al-go-rithms on the Open-StreetMap
+ []
+
+<figures/base_ui.png, id=18, 1442.38875pt x 730.73pt>
+File: figures/base_ui.png Graphic file (type png)
+<use figures/base_ui.png>
+Package pdftex.def Info: figures/base_ui.png  used on input line 64.
+(pdftex.def)             Requested size: 432.71997pt x 219.22069pt.
+
+Overfull \hbox (5.92862pt too wide) in paragraph at lines 64--65
+ [][] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+(./fapra_paper.bbl) [2 <./figures/arch.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./figures/arch.pdf): PDF inc
+lusion: invalid other resource which is no dict (key 'ProcSets', type <array>);
+ ignored.
+>] [3 <./figures/base_ui.png>] (./fapra_paper.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 3610 strings out of 492649
- 50084 string characters out of 6129622
- 138020 words of memory out of 5000000
- 7415 multiletter control sequences out of 15000+600000
- 16956 words of font info for 41 fonts, out of 8000000 for 9000
+ 3626 strings out of 492649
+ 50362 string characters out of 6129622
+ 139036 words of memory out of 5000000
+ 7426 multiletter control sequences out of 15000+600000
+ 17732 words of font info for 42 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,8n,25p,352b,259s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/cm-super/cm-s
-uper-t1.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfb
-x0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1
-200.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx144
-0.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0600.
-pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pf
-b></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb>
-</usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></
-usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></us
-r/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/
-local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/lo
-cal/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sftt0800.pfb>
-Output written on fapra_paper.pdf (1 page, 175762 bytes).
+ 41i,8n,25p,352b,260s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
+</usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb></
+usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></us
+r/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/
+local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/lo
+cal/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/loca
+l/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/
+texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/te
+xlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texl
+ive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texliv
+e/2018/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/
+2018/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/20
+18/texmf-dist/fonts/type1/public/cm-super/sftt0800.pfb>
+Output written on fapra_paper.pdf (3 pages, 4461893 bytes).
 PDF statistics:
- 53 PDF objects out of 1000 (max. 8388607)
- 38 compressed objects within 1 object stream
+ 76 PDF objects out of 1000 (max. 8388607)
+ 53 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
