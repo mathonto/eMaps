@@ -4,6 +4,7 @@
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[]{algorithm2e}
 
 %% Sets page size and margins
 \usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
@@ -79,14 +80,53 @@ When the user requests a shortest path calculation from the Frontend, arbitrary 
 Let us assume we want to locate the nearest node in our graph for a node called $n$.
 First, we locate $n$ in the grid by using the predecimal digits of its coordinates. 
 Then, we calculate the distance of all nodes in the cell to $n$ and choose the node with the smallest distance to $n$.
-Since the nearest node to $n$ may be in another cell, we also check neighboring cells.\\
+Since the nearest node to $n$ may be in another cell, we also check neighboring cells for the nearest neighbor.\\
 To extract charging stations from OpenStreetMap, we check for each node if a Key-Value-Pair $\lbrace amenity: charging\_station \rbrace$ exists, i.e. if the node is tagged as charging station in OpenStreetMap.
 Besides that, OpenStreetMap data also provides information about the vehicles that can be charged at a charging station.
 However, since OpenStreetMap is community-driven and based on user-generated data, not all charging stations contain information about the vehicles that can be charged.
 Thus, for charging stations without further information, we just assume that both cars and bikes can be charged.
 Hence, a charging station in our graph model contains coordinates, an enum indicating the vehicles that can be charged, and an identifier.
 \subsection{Routing}
+To route between two nodes in our graph, we use Dijkstra's Shortest Path Algorithm \cite{Dijkstra1959}.
+The user is able to select between routing for shortest time, or shortest distance, as visible in Figure \ref{fig:input}.
+TODO: explain distance/time
 \subsection{Routing for Electric Vehicles}
+The main functionality of this project is a route planner that considers the current and maximum range of electric vehicles, as well as charging stations to determine a route where an electric vehicle never runs out of battery.
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.3]{figures/input}
+    \caption{Modal for the user to e.g. enter current and maximum range}
+    \label{fig:input}
+\end{figure}
+Figure \ref{fig:input} depicts the modal where the user can enter the current and maximum range of the electric vehicle used for travelling.
+Once a start and target location is chosen, the user can submit the request for route planning including the parameters of current and maximum range to the Backend.
+Initially, in the Backend, a shortest path calculation is started from start to target.
+The pseudo code depicted in TODO simplifies the processing of the Backend once receiving such a request.\\
+
+\begin{algorithm}[H]
+ \KwData{start coordinates, target coordinates, current range, maximum range}
+ \KwResult{route}
+route $\leftarrow$  shortest path(start coordinates, target coordinates)\;
+required range $\leftarrow$ route.distance\;
+ \While{required range > current range}{
+ route $\rightarrow$ null\;
+ charging station coordinates $\leftarrow$ find optimal charging station coordinates\;
+ route to charging $\leftarrow$ shortest path(start coordinates, charging station coordinates)\;
+ route $\leftarrow$ route + route to charging\;
+ 
+ current range $\leftarrow$ maximum range\;
+ start coordinates $\leftarrow$ charging station coordinates\;
+ 
+ route to target $\leftarrow$ shortest path(start coordinates, target coordinates)\;
+ required range $\leftarrow$ route to target.distance\;
+ 
+  \If{route to target.distance < current range}{
+    route $\leftarrow$ full route + route to target\;
+   }
+ }
+ \Return{route}
+ \caption{Simplified route calulation}
+\end{algorithm}
 \section{Conclusion and Future Work}
 \bibliographystyle{alpha}
 \bibliography{ref}
