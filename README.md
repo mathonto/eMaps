@@ -2,7 +2,7 @@
     <img src="img/example.png"></img>
 </p>
 
-# Maps
+# eMaps
 
 ## Dependencies
 
