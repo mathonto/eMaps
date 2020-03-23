@@ -90,8 +90,7 @@ Thus, for charging stations without further information, we just assume that bot
 Hence, a charging station in our graph model contains coordinates, an enum indicating the vehicles that can be charged, and an identifier.
 \subsection{Routing}
 To route between two nodes in our graph, we use Dijkstra's Shortest Path Algorithm \cite{Dijkstra1959}.
-The user is able to select between routing for shortest time, or shortest distance, as visible in Figure \ref{fig:input}.
-TODO: explain distance/time
+The user is able to select between routing for shortest time or shortest distance, as visible in Figure \ref{fig:input}.
 \subsection{Routing for Electric Vehicles}
 The main functionality of this project is a route planner that considers the current and maximum range of electric vehicles, as well as charging stations to determine a route where an electric vehicle never runs out of battery.
 \begin{figure}[h]
