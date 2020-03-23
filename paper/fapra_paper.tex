@@ -30,9 +30,9 @@ This project explains the implementation of a route planner that considers the l
 Climate change and its consequences heavily impacted the engineering of means of transport.
 As a result, vehicles powered by electric batteries emerged, such as electrically-powered cars, bikes or scooters.
 By using regenerative energy sources, electrically-powered vehicles have the potential to significantly reduce the dependency of fossil fuel reserves \cite{Artmeier2010}.
-Furthermore, electric vehicles emit no emissions, hence, being more eco-friendly than vehicles running on gasoline.
-However, electric vehicles have characteristics that currently hinder its wide-spread adaption, i.e. (i) limited cruising range, and (ii) long recharge times\cite{Artmeier2010}.
-Especially the limited cruising range require an adaption of existing navigation and routing systems.
+Furthermore, electric vehicles emit no emissions and are therefore more eco-friendly than vehicles running on gasoline.
+However, electric vehicles have characteristics that currently hinder its wide-spread adaption, i.e. (i) limited cruising range, and (ii) long recharge times \cite{Artmeier2010}.
+Especially the limited cruising range requires an adaption of existing navigation and routing systems.
 We need to determine routes for electric vehicles considering the availability of charging stations and the range of electric vehicles to avoid running out of power.\par\medskip
 Using OpenStreetMap\footnote{\url{https://www.openstreetmap.org}} data, we demonstrate the implementation of a route planner that considers the range of an electric vehicle and the availability of charging stations. 
 \section{OpenStreetMap}
@@ -54,10 +54,10 @@ The \textbf{Resources} represent the raw OpenStreetMap data which was provided i
 The \textbf{Backend} provides the core functionality and implements algorithms on the OpenStreetMap data.
 It is implemented as Web Server in \textit{Rust}\footnote{\url{https://www.rust-lang.org}}.
 The core functionality of the Backend includes (i) a parser to map the OpenStreetMap data to a \textit{Domain Object Model} (DOM) representation in Rust,
-(ii) a shortest path algorithm, and (iii) an \textit{Application Programming Interface} (API) to expose the functionality for access from the \textbf{Frontend}.\par\medskip
-The Frontend is built using the \textit{React}\footnote{\url{https://reactjs.org}} Web Framework and \textit{Leaflet}\footnote{\url{https://leafletjs.com}}. Leaflet is an open-source JavaScript library for interactive maps based on OpenStreetMap.
+(ii) a shortest path algorithm, and (iii) an \textit{Application Programming Interface} (API) to expose the functionality for access from the Frontend.\par\medskip
+The \textbf{Frontend} is built using the \textit{React}\footnote{\url{https://reactjs.org}} Web Framework and \textit{Leaflet}\footnote{\url{https://leafletjs.com}}. Leaflet is an open-source JavaScript library for interactive maps based on OpenStreetMap.
 Leaflet is used to provide a user-friendly map and allows to e.g. set markers or draw routes.
-Figure \ref{fig:base_ui} shows the basic look of the Frontend.
+Figure \ref{fig:base_ui} displays the Frontend in its initial state.
 Furthermore, the \textit{Nominatim}\footnote{\url{https://nominatim.openstreetmap.org}} API is used to allow the user to search for places, cities or Point-Of-Interests (POIs).
 The Frontend interacts with the Backend via \textit{HTTP} requests.
 \begin{figure}[h]
