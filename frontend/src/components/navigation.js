@@ -53,7 +53,8 @@ export default class Navigation extends React.Component {
             suggestions: [],
             current_range: '',
             max_range: '',
-            isCalculating: false
+            isCalculating: false,
+            clickedChargingShow: false
         };
 
         document.oncontextmenu = () => {
@@ -119,6 +120,12 @@ export default class Navigation extends React.Component {
             value: ''
         });
     };
+
+    onShowingChargingStations = () => {
+        this.setState({
+            clickedChargingShow: !this.state.clickedChargingShow
+        });
+    }
 
     /**
      * Called when calculation is started to display loading screen.
@@ -234,10 +241,7 @@ export default class Navigation extends React.Component {
                     </div>
                     <div>
                         <ButtonGroup fullWidth aria-label="split button">
-                            <Button
-                                id='charging-stations'
-                                variant="contained"
-                                onClick={this.showChargingStations}>SHOW<EvStationIcon></EvStationIcon></Button>
+                            {this.chargingButtonRenderer()}
                             <Button
                                 id='go'
                                 variant="contained"
@@ -258,15 +262,33 @@ export default class Navigation extends React.Component {
             ;
     }
 
+    chargingButtonRenderer() {
+        return (
+            this.state.clickedChargingShow ? <Button
+                id='charging-stations'
+                variant="contained"
+                onClick={this.showChargingStations}>HIDE<EvStationIcon></EvStationIcon></Button> : <Button
+                id='charging-stations'
+                variant="contained"
+                onClick={this.showChargingStations}>SHOW<EvStationIcon></EvStationIcon></Button>
+        )
+    }
+
     showChargingStations = () => {
         const chargingMarkers = [];
+        if (this.state.clickedChargingShow) {
+            this.props.setAllChargingStations([]);
+            this.onShowingChargingStations();
+            return;
 
+        }
         axios.get(BASE_URL + '/charging-stations').then(response => {
                 // extract visited charging stations
                 for (const charging_coords of response.data.charging_coords) {
                     chargingMarkers.push(Object.values(charging_coords));
                 }
                 this.props.setAllChargingStations(chargingMarkers);
+                this.onShowingChargingStations();
             }
         ).catch(err => {
             toast.error(err.response.data);

@@ -97,8 +97,7 @@ export default class App extends React.Component {
             path: [],
             time: '0h 0min',
             distance: 0,
-            chargingMarkers: [],
-            allChargingStations: []
+            chargingMarkers: []
         });
     };
 
