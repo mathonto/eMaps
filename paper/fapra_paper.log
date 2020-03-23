@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  23 MAR 2020 15:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  23 MAR 2020 15:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -372,16 +372,11 @@ Overfull \hbox (1.30222pt too wide) in paragraph at lines 54--57
  func-tion-al-ity and im-ple-ments al-go-rithms on the Open-StreetMap
  []
 
-<figures/base_ui.png, id=18, 1442.38875pt x 730.73pt>
+<figures/base_ui.png, id=18, 1597.97pt x 890.32625pt>
 File: figures/base_ui.png Graphic file (type png)
 <use figures/base_ui.png>
 Package pdftex.def Info: figures/base_ui.png  used on input line 65.
-(pdftex.def)             Requested size: 432.71997pt x 219.22069pt.
-
-Overfull \hbox (5.92862pt too wide) in paragraph at lines 65--66
- [][] 
- []
-
+(pdftex.def)             Requested size: 399.49152pt x 222.58101pt.
 [2 <./figures/arch.pdf
 
 pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./figures/arch.pdf): PDF inc
@@ -435,7 +430,7 @@ mf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2018/texmf
 ist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2018/texmf-dis
 t/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/2018/texmf-dist/
 fonts/type1/public/cm-super/sftt0800.pfb>
-Output written on fapra_paper.pdf (6 pages, 7139487 bytes).
+Output written on fapra_paper.pdf (6 pages, 4390340 bytes).
 PDF statistics:
  105 PDF objects out of 1000 (max. 8388607)
  71 compressed objects within 1 object stream
