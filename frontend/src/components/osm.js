@@ -46,7 +46,7 @@ export default class Osm extends React.Component {
         let index = 0;
         for (const element of this.props.state.chargingMarkers) {
             index += 1;
-            if (element == el) {
+            if (element === el) {
                 return index;
             }
         }
@@ -64,6 +64,7 @@ export default class Osm extends React.Component {
 
                 {this.props.state.from.coordinates && <Marker position={this.props.state.from.coordinates}/>}
                 {this.props.state.to.coordinates && <Marker position={this.props.state.to.coordinates}/>}
+                {this.props.state.allChargingStations.map(el => <Marker position={el}></Marker>)}
                 {this.props.state.chargingMarkers.map(el => <Marker position={el} icon={this.getMarker()}>
                     <Tooltip direction='right' offset={[-8, -2]} opacity={1}
                              permanent><span>STOP {this.getCounter(el)}</span></Tooltip></Marker>)}

@@ -17,6 +17,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import TextField from '@material-ui/core/TextField';
 import LoadingOverlay from 'react-loading-overlay';
 import styled from 'styled-components'
+import EvStationIcon from '@material-ui/icons/EvStation';
+
 
 const StyledLoader = styled(LoadingOverlay)`
   width: 372px;
@@ -233,6 +235,10 @@ export default class Navigation extends React.Component {
                     <div>
                         <ButtonGroup fullWidth aria-label="split button">
                             <Button
+                                id='charging-stations'
+                                variant="contained"
+                                onClick={this.showChargingStations}>SHOW<EvStationIcon></EvStationIcon></Button>
+                            <Button
                                 id='go'
                                 variant="contained"
                                 onClick={this.go}>GO</Button>
@@ -250,6 +256,21 @@ export default class Navigation extends React.Component {
             </StyledLoader>
         )
             ;
+    }
+
+    showChargingStations = () => {
+        const chargingMarkers = [];
+
+        axios.get(BASE_URL + '/charging-stations').then(response => {
+                // extract visited charging stations
+                for (const charging_coords of response.data.charging_coords) {
+                    chargingMarkers.push(Object.values(charging_coords));
+                }
+                this.props.setAllChargingStations(chargingMarkers);
+            }
+        ).catch(err => {
+            toast.error(err.response.data);
+        });
     }
 
     /**

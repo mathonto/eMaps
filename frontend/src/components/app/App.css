@@ -24,12 +24,17 @@
     font-size: medium;
 }
 
-#go, #input-to, #button-group, #travel, #reset {
+#go, #input-to, #button-group, #travel, #reset, #charging-stations {
     margin-top: .7em;
 }
 
 #go {
     background: #4285f4;
+    color: white;
+}
+
+#charging-stations {
+    background: forestgreen;
     color: white;
 }
 

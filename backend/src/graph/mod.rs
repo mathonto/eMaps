@@ -58,6 +58,10 @@ impl Graph {
         }
     }
 
+    pub fn get_charging_stations(&self) -> &Vec<ChargingNode> {
+        &self.charging_nodes
+    }
+
     /**
     Read pbf file and create graph.
     *

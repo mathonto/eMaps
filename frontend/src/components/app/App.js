@@ -34,6 +34,7 @@ export default class App extends React.Component {
             time: '0h 0min',
             distance: 0,
             chargingMarkers: [],
+            allChargingStations: [],
             isOpened: true
         };
 
@@ -80,6 +81,12 @@ export default class App extends React.Component {
         });
     };
 
+    setAllChargingStations = (chargingMarkers) => {
+        this.setState({
+            allChargingStations: chargingMarkers
+        });
+    };
+
     /**
      * Reset everything.
      */
@@ -90,7 +97,8 @@ export default class App extends React.Component {
             path: [],
             time: '0h 0min',
             distance: 0,
-            chargingMarkers: []
+            chargingMarkers: [],
+            allChargingStations: []
         });
     };
 
@@ -124,6 +132,7 @@ export default class App extends React.Component {
                                     setRoute={this.setRoute}
                                     setFrom={this.setFrom}
                                     setTo={this.setTo}
+                                    setAllChargingStations={this.setAllChargingStations}
                                     clearMap={this.clearMap}/>
                     </Collapse>
                     <div>

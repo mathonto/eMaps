@@ -17,7 +17,7 @@ use log::debug;
 use serde::{Deserialize, Serialize};
 use serde::export::Formatter;
 
-use crate::graph::Graph;
+use crate::graph::{Graph, ChargingNode};
 use crate::graph::router::{Route, Router};
 use crate::osm::Coordinates;
 use crate::osm::options::Routing;
@@ -43,6 +43,7 @@ pub fn init(graph: Graph) {
                 .show_files_listing()
                 .use_last_modified(true))
             .service(shortest_path)
+            .service(charging_stations)
 
             .wrap(Logger::default())
             .wrap(Cors::new()
@@ -55,6 +56,20 @@ pub fn init(graph: Graph) {
 #[get("/")]
 pub fn index() -> Result<NamedFile> {
     Ok(NamedFile::open(Path::new(PATH_INDEX))?)
+}
+
+/**
+Handle request for all charging stations.
+*
+@param state: current state
+*/
+#[get("/charging-stations")]
+fn charging_stations(state: Data<Graph>) -> Result<HttpResponse> {
+    debug!("Getting charging stations...");
+    let all_charging_stations = Graph::get_charging_stations(state.get_ref());
+    println!("{}", all_charging_stations.len());
+    let resp = ChargingResponse::from(all_charging_stations);
+    Ok(HttpResponse::Ok().json(resp))
 }
 
 /**
@@ -191,6 +206,22 @@ struct Request {
     routing: String,
     current_range: String,
     max_range: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct ChargingResponse {
+    charging_coords: Vec<FloatCoordinates>
+}
+
+impl ChargingResponse {
+    fn from(charging_nodes: &Vec<ChargingNode>) -> Self {
+        let charging_coords = charging_nodes.iter()
+            .map(|coord| FloatCoordinates::from(&coord.coordinates))
+            .collect();
+        Self {
+            charging_coords
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
