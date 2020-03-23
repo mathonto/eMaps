@@ -153,12 +153,13 @@ impl<'a> Router<'a> {
                 and current range is used efficiently by choosing most distantly charging station
                 reachable with current range and closest charging station to original goal
                 */
-                if f64::from(dist_from_start) * 1.5 < f64::from(current_range) && dist_from_start > global_dist_from_start
-                    && dist_to_goal < global_dist_to_goal {
-                    // update global comparison values and selected charging station coordinates
-                    global_dist_from_start = dist_from_start;
-                    global_dist_to_goal = dist_to_goal;
-                    charging_coords = &charging_node.coordinates;
+                if f64::from(dist_from_start) * 1.5 < f64::from(current_range) {
+                    if dist_from_start > global_dist_from_start && dist_to_goal < global_dist_to_goal {
+                        // update global comparison values and selected charging station coordinates
+                        global_dist_from_start = dist_from_start;
+                        global_dist_to_goal = dist_to_goal;
+                        charging_coords = &charging_node.coordinates;
+                    }
                 }
             }
         }

@@ -151,7 +151,7 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
                         return Err(Error(error.to_string()));
                     }
                 }
-                if iter_count > 1000 {
+                if iter_count > 100 {
                     debug!("No path found, calculation took {}ms", now.elapsed().as_millis());
                     return Err(Error("Please enter reasonable ranges.".parse().unwrap()));
                 }
