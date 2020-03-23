@@ -1,5 +1,5 @@
 import React from "react";
-import {Map, Marker, Polyline, TileLayer, Tooltip} from "react-leaflet";
+import { CircleMarker, Map, Marker, Polyline, TileLayer, Tooltip } from "react-leaflet";
 import L from 'leaflet'
 
 export default class Osm extends React.Component {
@@ -58,22 +58,33 @@ export default class Osm extends React.Component {
                  bounds={this.bounds_exist() && [this.props.state.from.coordinates, this.props.state.to.coordinates]}
                  zoom={16}
                  zoomControl={false}
+                 preferCanvas={true}
                  onClick={this.setMarkers}>
                 <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'/>
 
                 {this.props.state.from.coordinates && <Marker position={this.props.state.from.coordinates}/>}
                 {this.props.state.to.coordinates && <Marker position={this.props.state.to.coordinates}/>}
-                {this.props.state.allChargingStations.map(el => <Marker position={el}></Marker>)}
-                {this.props.state.chargingMarkers.map(el => <Marker position={el} icon={this.getMarker()}>
-                    <Tooltip direction='right' offset={[-8, -2]} opacity={1}
-                             permanent><span>STOP {this.getCounter(el)}</span></Tooltip></Marker>)}
-
+                {this.props.state.allChargingStations.map(el => <CircleMarker
+                    center={el}
+                ></CircleMarker>)}
+                {this.props.state.chargingMarkers.map(el => <Marker
+                    position={el}
+                    icon={this.getMarker()}>
+                    <Tooltip
+                        direction='right'
+                        offset={[-8, -2]}
+                        opacity={1}
+                        permanent>
+                        <span>STOP {this.getCounter(el)}</span>
+                    </Tooltip>
+                </Marker>)}
                 {this.props.state.path.length >= 2 && <Polyline positions={this.props.state.path}
                                                                 color={'blue'}/>}
             </Map>
         );
     }
+
 
     /**
      * Set from/to value on click on map.
