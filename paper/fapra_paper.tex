@@ -58,7 +58,6 @@ The core functionality of the Backend includes (i) a parser to map the OpenStree
 The \textbf{Frontend} is built using the \textit{React}\footnote{\url{https://reactjs.org}} Web Framework and \textit{Leaflet}\footnote{\url{https://leafletjs.com}}. Leaflet is an open-source JavaScript library for interactive maps based on OpenStreetMap.
 Leaflet is used to provide a user-friendly map and allows to e.g. set markers or draw routes.
 Figure \ref{fig:base_ui} displays the Frontend in its initial state.
-Furthermore, the \textit{Nominatim}\footnote{\url{https://nominatim.openstreetmap.org}} API is used to allow the user to search for places, cities or Point-Of-Interests (POIs).
 The Frontend interacts with the Backend via \textit{HTTP} requests.
 \begin{figure}[h]
     \centering
@@ -169,7 +168,23 @@ The visited charging stations are highlighted for the user as visible in the Fig
     \caption{Successfully calculation of route with charging stations}
     \label{fig:success}
 \end{figure}
-\subsection{Limitations and Future Work}
+\subsection{Further Features}
+Another feature of the application is the use of the \textit{Nominatim}\footnote{\url{https://nominatim.openstreetmap.org}} API to allow the user to search for places, cities or Point-Of-Interests (POIs) as seen in Figure \ref{fig:search}.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.25]{figures/search}
+	\caption{Search via Nominatim}
+	\label{fig:search}
+\end{figure}
+Furthermore, it is possible to show (or hide) all charging stations that exist, as seen in Figure \ref{fig:charging}.
+These charging stations are, upon request, fetched from the backend via a HTTP GET request and rendered.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.25]{figures/wide}
+	\caption{Display all charging stations}
+	\label{fig:charging}
+\end{figure}
+\section{Limitations and Future Work}
 Since this project was within the scope of the lecture \textit{Fachpraktikum Algorithms on OpenStreetMap Data} the time spent on the concept and implementation was limited.
 Hence, the route calculation with charging stations may not be optimal, as well as determining the charging stations on the route since they follow a rather naive approach.
 Furthermore, considering the elevation profile of the road network might help to determine more energy efficient routes for electric vehicles, i.e. routes that go downhill or have a low elevation in general.\par\medskip
