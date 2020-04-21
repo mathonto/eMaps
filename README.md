@@ -4,6 +4,9 @@
 
 # eMaps
 
+## Documentation
+Visit the [doc](doc) folder for further documentation, i.e. a presentation and a paper about this project.
+
 ## Dependencies
 
 - [Rust + Cargo](https://rustup.rs/)
