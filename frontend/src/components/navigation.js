@@ -1,16 +1,16 @@
 import React from "react";
-import { Input } from "@material-ui/core";
+import {Input} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
-import { DirectionsBike, DirectionsCar } from "@material-ui/icons";
+import {DirectionsBike, DirectionsCar} from "@material-ui/icons";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
-import { BASE_URL, NOMINATIM_API, StyledWrapper } from "../config";
+import {BASE_URL, NOMINATIM_API, StyledWrapper} from "../config";
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import Divider from '@material-ui/core/Divider';
 import Autosuggest from 'react-autosuggest';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,7 +18,6 @@ import TextField from '@material-ui/core/TextField';
 import LoadingOverlay from 'react-loading-overlay';
 import styled from 'styled-components'
 import EvStationIcon from '@material-ui/icons/EvStation';
-
 
 const StyledLoader = styled(LoadingOverlay)`
   width: 372px;

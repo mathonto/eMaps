@@ -1,5 +1,5 @@
 import React from "react";
-import { CircleMarker, Map, Marker, Polyline, TileLayer, Tooltip } from "react-leaflet";
+import {CircleMarker, Map, Marker, Polyline, TileLayer, Tooltip} from "react-leaflet";
 import L from 'leaflet'
 
 export default class Osm extends React.Component {
@@ -11,16 +11,19 @@ export default class Osm extends React.Component {
     }
 
     componentDidMount() {
-        if (navigator.geolocation) {
-            const callback = (position) => {
+        navigator.geolocation.getCurrentPosition(
+            position => {
                 const coordinates = [
                     position.coords.latitude,
                     position.coords.longitude
                 ];
                 this.setState({coordinates});
-            };
-            navigator.geolocation.getCurrentPosition(callback);
-        }
+            },
+            failure => {
+                console.log(failure)
+            },
+            {maximumAge: 60000, timeout: 5000}
+        );
     }
 
     /**
