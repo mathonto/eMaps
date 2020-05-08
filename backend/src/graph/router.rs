@@ -342,7 +342,7 @@ mod tests {
 
     #[test]
     fn shortest_path() {
-        let graph = Graph::from_bin("target/stuttgart-regbez-latest.bin");
+        let graph = Graph::from_bin("stuttgart-regbez-latest.bin");
         let mut router = Router::new(&graph, Car, Distance);
         let start =
             Coordinates::from(Point::new(48.7417761, 9.1036340));
