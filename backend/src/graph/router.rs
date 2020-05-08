@@ -134,8 +134,7 @@ impl<'a> Router<'a> {
     @return coordinates of charging station based on original start, goal, and current range
     */
     pub fn get_optimal_charging_station_coords(&self, actual_start: &Coordinates, actual_goal: &Coordinates, current_range: u32) -> Coordinates {
-        let mut global_dist_from_start = 0;
-        let mut global_dist_to_goal = u32::max_value();
+        let mut global_dist_sum = u32::max_value();
         let mut charging_coords = actual_start;
         // get required charging station mode based on mode, e.g. for e-car or e-bike
         let required_charging = ChargingOptions::from(self.mode);
@@ -146,19 +145,16 @@ impl<'a> Router<'a> {
             if charging_node.charging_options.contains(required_charging) {
                 let dist_from_start = actual_start.distance(&charging_node.coordinates);
                 let dist_to_goal = actual_goal.distance(&charging_node.coordinates);
-                /*
-                add 1,5 as threshold since calculated distance is not the actual distance when driven but linear distance
-                *
-                check if charging station is reachable from original start based on current range
-                and current range is used efficiently by choosing most distantly charging station
-                reachable with current range and closest charging station to original goal
-                */
-                if f64::from(dist_from_start) * 1.5 < f64::from(current_range) {
-                    if dist_from_start > global_dist_from_start && dist_to_goal < global_dist_to_goal {
-                        // update global comparison values and selected charging station coordinates
-                        global_dist_from_start = dist_from_start;
-                        global_dist_to_goal = dist_to_goal;
-                        charging_coords = &charging_node.coordinates;
+                let dist_sum = dist_from_start + dist_to_goal;
+
+                // assumption: dijkstra route distance shall not be bigger than 1,25 * haversine distance
+                if f64::from(dist_from_start) * 1.25 <= f64::from(current_range) {
+                    // we want to utilize at least 50% of current range
+                    if f64::from(dist_from_start) >= (f64::from(current_range) * 0.5) {
+                        if f64::from(dist_sum) < f64::from(global_dist_sum) {
+                            global_dist_sum = dist_sum;
+                            charging_coords = &charging_node.coordinates;
+                        }
                     }
                 }
             }
