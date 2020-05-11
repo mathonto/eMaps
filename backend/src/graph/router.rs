@@ -147,8 +147,8 @@ impl<'a> Router<'a> {
                 let dist_to_goal = actual_goal.distance(&charging_node.coordinates);
                 let dist_sum = dist_from_start + dist_to_goal;
 
-                // assumption: dijkstra route distance shall not be bigger than 1,25 * haversine distance
-                if f64::from(dist_from_start) * 1.25 <= f64::from(current_range) {
+                // assumption: dijkstra route distance is not bigger than 1,25 * haversine distance
+                if f64::from(dist_from_start) * 1.35 <= f64::from(current_range) {
                     // we want to utilize at least 50% of current range
                     if f64::from(dist_from_start) >= (f64::from(current_range) * 0.5) {
                         if f64::from(dist_sum) < f64::from(global_dist_sum) {
