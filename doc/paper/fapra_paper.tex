@@ -53,7 +53,7 @@ For the architecture of the application, the common \textbf{Model-View-Controlle
 The \textbf{Resources} represent the raw OpenStreetMap data which was provided in the \textit{Protocolbuffer Binary Format (PBF)}\footnote{\url{https://wiki.openstreetmap.org/wiki/PBF_Format}}.\par\medskip
 The \textbf{Backend} provides the core functionality and implements algorithms on the OpenStreetMap data.
 It is implemented as Web Server in \textit{Rust}\footnote{\url{https://www.rust-lang.org}}.
-The core functionality of the Backend includes (i) a parser to map the OpenStreetMap data to a \textit{Domain Object Model} (DOM) representation in Rust,
+The core functionality of the Backend includes (i) a parser to map the OpenStreetMap data to a domain model representation in Rust,
 (ii) a shortest path algorithm, and (iii) an \textit{Application Programming Interface} (API) to expose the functionality for access from the Frontend.\par\medskip
 The \textbf{Frontend} is built using the \textit{React}\footnote{\url{https://reactjs.org}} Web Framework and \textit{Leaflet}\footnote{\url{https://leafletjs.com}}. Leaflet is an open-source JavaScript library for interactive maps based on OpenStreetMap.
 Leaflet is used to provide a user-friendly map and allows to e.g. set markers or draw routes.
@@ -67,23 +67,24 @@ The Frontend interacts with the Backend via \textit{HTTP} requests.
 \end{figure}
 \subsection{Graph}
 The Backend parses the graph data from OpenStreetMap in the PBF format.
-This allows to map the graph data from a PBF file, e.g. the road network graph of Germany, to a DOM representation in Rust.
-However, only necessary data is parsed from the PBF file for performance and efficiency reasons.
+Only necessary data is parsed from the PBF file for performance and efficiency reasons.
 We focus on \textit{ways}, \textit{nodes}, and \textit{amenities} in OpenStreetMap. A node in OpenStreetMap is a single geographical data point with latitude and longitude. A way is a combination of multiple nodes building a sequence, e.g. a street.
 Amenities are arbitrary geographical POIs, e.g. a restaurant, a bar, or a charging station.
 Amenities are stored as Key-Value-Pairs in OpenStreetMap, e.g. $\lbrace amenity: charging\_station \rbrace$.
 The implementation of this route planner focuses on electric cars and electric bikes, hence we only parse ways where cars and bikes are allowed to drive on.
 Furthermore, we parse charging stations from the amenities to be able to consider those later on when calculating a route.\par\medskip
-Our graph is structured as follows: $G = \lbrace N, E, O, C, CN \rbrace$ with (i) $N$ being a set of nodes, (ii) $W$ being a set of edges, (iii) $O$ being a offset array, (iv) $C$ being a cell hashmap and $CN$ being a set of nodes that represent a charging station.
-The offset array is used to efficiently access the edges of a node. The cell hashmap is used to create a grid layer above the graph to speed up the search of the nearest node in the graph for coordinates.
-While creating the graph, every node is hashed into a grid cell using the predecimal digits of latitude and longitude of its coordinates.
-When the user requests a shortest path calculation from the Frontend, arbitrary start and target locations may be passed, however since we only parsed ways that are valid for cars and bikes, we may need to locate the nearest node in our graph to the start and target location as passed by the user.
+Our graph is structured as follows: $G = \lbrace N, E, O, C, CN \rbrace$ with (i) $N$ being a set of nodes, (ii) $E$ being a set of edges, (iii) $O$ being a offset array, (iv) $C$ being a cell hashmap and $CN$ being a set of nodes that represent a charging station.
+The offset array is used to efficiently access the edges of a node. The cell hashmap is used to create a grid layer above the graph to speed up the search of the nearest node in the graph for given coordinates.
+While creating the graph, every node is hashed into a grid cell using the predecimal digits of latitude and longitude of its coordinates.\par\smallskip
+When the user requests a shortest path calculation from the Frontend, arbitrary start and goal locations may be passed. 
+Since we only parsed ways that are valid for cars and bikes, the start and goal locations may not be present in our graph.
+Thus, we may need to locate the nearest node in our graph to the start and goal location as passed by the user.\par\smallskip
 Let us assume we want to locate the nearest node in our graph for a node called $n$.
 First, we locate $n$ in the grid by using the predecimal digits of its coordinates. 
 Then, we calculate the distance of all nodes in the cell to $n$ and choose the node with the smallest distance to $n$.
-Since the nearest node to $n$ may be in another cell, we also check neighboring cells for the nearest neighbor.\\
+Since the nearest node to $n$ may be in another cell, we also check neighboring cells for the nearest neighbor.\par\medskip
 To extract charging stations from OpenStreetMap, we check for each node if a Key-Value-Pair $\lbrace amenity: charging\_station \rbrace$ exists, i.e. if the node is tagged as charging station in OpenStreetMap.
-Besides that, OpenStreetMap data also provides information about the vehicles that can be charged at a charging station.
+Besides that, OpenStreetMap data may also provide information about the vehicles that can be charged at a charging station.
 However, since OpenStreetMap is community-driven and based on user-generated data, not all charging stations contain information about the vehicles that can be charged.
 Thus, for charging stations without further information, we just assume that both cars and bikes can be charged.
 Hence, a charging station in our graph model contains coordinates, an enum indicating the vehicles that can be charged, and an identifier.
@@ -99,10 +100,10 @@ The main functionality of this project is a route planner that considers the cur
     \label{fig:input}
 \end{figure}
 Figure \ref{fig:input} depicts the modal where the user can enter the current and maximum range of the electric vehicle used for travelling.
-Once a start and target location is chosen, the user can submit the request for route planning including the parameters of current and maximum range to the Backend.
+Once a start and goal location is chosen, the user can submit the request for route planning including the parameters of current and maximum range to the Backend.
 The pseudo code depicted in Algorithm \ref{alg:route} simplifies the processing of the Backend once receiving such a request.\par\bigskip
 \begin{algorithm}[H]
- \KwData{start coordinates, target coordinates, current range, maximum range}
+ \KwData{start coordinates, goal coordinates, current range, maximum range}
  \KwResult{route}
 naive route $\leftarrow$  shortest path(start coordinates, goal coordinates)\;
 required range $\leftarrow$ route.distance\;
@@ -115,10 +116,10 @@ required range $\leftarrow$ route.distance\;
  start coordinates $\leftarrow$ charging station coordinates\;
  
  route to goal $\leftarrow$ shortest path(start coordinates, goal coordinates)\;
- required range $\leftarrow$ route to target.distance\;
+ required range $\leftarrow$ route to goal.distance\;
  
   \If{required range < current range}{
-    route $\leftarrow$ route + route to target\;
+    route $\leftarrow$ route + route to goal\;
      \Return{route}
    }
  }
@@ -126,18 +127,18 @@ required range $\leftarrow$ route.distance\;
  \caption{Simplified route calculation}
  \label{alg:route}
 \end{algorithm}\par\bigskip
-At first, we calculate the shortest path based on the start and goal parameters
-In line 3, we check if the distance of the shortest path surpasses our current range, i.e. if we need to charge our electric vehicle.
+At first, we calculate the shortest path based on the start and goal parameters.
+In line 3, we check if the distance of the shortest path surpasses our current range, i.e. if we need to charge our electric vehicle to travel from start to goal.
 If the current range is sufficient for the calculated shortest path, we jump to line 16 and return the route to the Frontend.
-If the current range is not sufficient, we need to visit a charging station.
-Hence, we start the calculation of a charging station based on the start, goal, the current and maximum range, as well as our means of transportation (car or bike).\par\medskip
+If the current range is not sufficient, we need to visit at least one charging station.
+Hence, we need to determine a charging station to visit, based on the start, goal, the current and maximum range, as well as our means of transportation (car or bike).\par\medskip
 This calculation is depicted in Algorithm \ref{alg:charg}. 
-After initializing variables we need later on, we start iterating over all charging stations in line 5.
-In line 6, we check if the current charging station supports our means of transportation.
+After initializing variables we need later on, we start iterating over all charging stations of our graph in line 5.
+In line 6, we check if the current charging station supports the means of transportation passed by the user.
 If this is the case, we need to determine whether the current charging station is within our current range, i.e. if the range of our electric vehicle is sufficient to reach the charging station.
 \par\bigskip
 \begin{algorithm}[H]
-	\KwData{start coordinates, target coordinates, current range, transportation mode}
+	\KwData{start coordinates, goal coordinates, current range, transportation mode}
 	\KwResult{chosen charging station}
 	
 	global min distance sum $\leftarrow$ max\;
@@ -184,15 +185,15 @@ Since the distance for a shortest path between two points on a road network is b
 	\caption{Display all charging stations}
 	\label{fig:charging}
 \end{figure}
-Hence, we use a multiplier of 1.5 as a heuristic for the haversine distance between the start and the charing station when comparing it to our current range as seen in line 8.
+To ensure this, we use a multiplier of 1.5 as a heuristic for the haversine distance between the start and the charging station when comparing it to our current range as seen in line 8.
 By using this value, we assume that the actual shortest path distance between two points on our road network is less or equal than $1.5$ times the haversine distance.
 If the distance to the charging station is within our current range, we check in line 9 if at least 50\% of our current range is utilized to avoid wasting our range.
 If at least 50\% of our range is utilized, we calculate the haversine distance from the current charging station to the goal.
-In line 11, we sum up the haversine distances from the start to the current charging station, and from the charging station to the goal, as we want to determine the charging station with the smallest total distance sum between start, charging station and goal.
-In line 12, we check if the sum is smaller than the current global minimum distance sum and if this is the case, we update the current global minimum distance sum and the best charging station accordingly as visible in line 12 and 13.\par\medskip
+In line 11, we sum up the haversine distances from the start to the current charging station, and from the charging station to the goal, as we want to determine the charging station with the smallest total distance between start, charging station and goal.
+In line 12, we check if the sum is smaller than the current minimal total distance and, if this is the case, update the current global minimal distance sum and the chosen charging station accordingly.\par\medskip
 Once we determined a charging station with Algorithm \ref{alg:charg}, we jump back to Algorithm \ref{alg:route} and calculate the shortest path from the start location to the chosen charging station location.
 Then, we set our current range as maximum range, since we assume that we fully charged our electric vehicle, and replace the original start with the charging station as depicted in line 8 and 9.
-Following, we calculate the shortest path from our new start to the target location, and update the required range accordingly.
+Following, we calculate the shortest path from our new start to the goal location, and update the required range accordingly.
 In line 11, we check if the required range is less or equal our current range, i.e. if the remaining distance does not require further charging, and if that is the case, we concatenate the calculated routes to one single route and return it in line 12 and 13.
 However, if the remaining distance is still bigger than our current range, we jump back to the start of the while loop in line 4 and repeat the procedure until the remaining distance is within our current range.\par\bigskip
 Figure \ref{fig:success} shows the Frontend with a successfully calculated route with charging stations.
@@ -203,15 +204,14 @@ Furthermore, it is possible to show (or hide) all charging stations that exist, 
 These charging stations are, upon request, fetched from the backend via a HTTP GET request and rendered.
 \section{Limitations and Future Work}
 Since this project was within the scope of the lecture \textit{Fachpraktikum Algorithms on OpenStreetMap Data} the time spent on the concept and implementation was limited.
-Hence, the route calculation with charging stations may not be optimal, as well as determining the charging stations on the route since they follow a rather naive approach.
+Hence, the route calculation with charging stations may not be optimal, especially determining the charging stations on the route.
 Furthermore, considering the elevation profile of the road network might help to determine more energy efficient routes for electric vehicles, i.e. routes that go downhill or have a low elevation in general.\par\medskip
 For example, Artmeier et al. \cite{Artmeier2010} proposed an extension to general shortest-path algorithms that address the problem of energy-optimal routing by extending a graph with a weight function representing the energy consumption \cite{Artmeier2010}.
 To achieve a better routing for electric vehicles in terms of energy efficiency, a similar approach could be implemented on top of this project.\par\medskip
-Worley et al. \cite{Worley2012} presented a model that addresses the problem of locating charging stations and calculate routes for electric vehicles based on discrete integer programming optimization and the traditional Vehicle Routing Problem \cite{Worley2012}.
-This model could also be used as an orientation to optimize the implementation of choosing a charging stations on the route once required.
+Worley et al. \cite{Worley2012} presented a model that addresses the problem of locating charging stations and calculate routes for electric vehicles based on discrete integer programming optimization and the traditional Vehicle Routing Problem \cite{Worley2012} that could be used to optimize the current implementation.
 \section{Conclusion}
 This project demonstrated the use and suitability of OpenStreetMap road network and amenity data to perform route planning for electric vehicles.
-The implemented application is a route planner that considers the limited cruising range of electric vehicles, as well as the availability of charging stations along the route.
+The implemented application is a route planner that considers the limited cruising range of electric vehicles, as well as the availability of charging stations along the route with the primary goal to avoid running out of power.
 \bibliographystyle{alpha}
 \bibliography{ref}
 \end{document}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  11 MAY 2020 14:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  11 MAY 2020 15:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -391,7 +391,7 @@ lusion: invalid other resource which is no dict (key 'ProcSets', type <array>);
 <figures/input.png, id=34, 425.59pt x 386.44376pt>
 File: figures/input.png Graphic file (type png)
 <use figures/input.png>
-Package pdftex.def Info: figures/input.png  used on input line 97.
+Package pdftex.def Info: figures/input.png  used on input line 98.
 (pdftex.def)             Requested size: 191.51372pt x 173.89807pt.
 
 
@@ -401,17 +401,17 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 <figures/success.png, id=46, 1384.17125pt x 893.3375pt>
 File: figures/success.png Graphic file (type png)
 <use figures/success.png>
-Package pdftex.def Info: figures/success.png  used on input line 171.
+Package pdftex.def Info: figures/success.png  used on input line 172.
 (pdftex.def)             Requested size: 373.73123pt x 241.20435pt.
 <figures/search.png, id=47, 403.5075pt x 534.99875pt>
 File: figures/search.png Graphic file (type png)
 <use figures/search.png>
-Package pdftex.def Info: figures/search.png  used on input line 177.
+Package pdftex.def Info: figures/search.png  used on input line 178.
 (pdftex.def)             Requested size: 161.40013pt x 213.9957pt.
 <figures/wide.png, id=48, 1512.65125pt x 886.31125pt>
 File: figures/wide.png Graphic file (type png)
 <use figures/wide.png>
-Package pdftex.def Info: figures/wide.png  used on input line 183.
+Package pdftex.def Info: figures/wide.png  used on input line 184.
 (pdftex.def)             Requested size: 347.90247pt x 203.84729pt.
 
 
@@ -421,7 +421,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [5 <./figures/success.png>] [6 <./figures/search.png> <./figures/wide.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 198--200
+Underfull \hbox (badness 10000) in paragraph at lines 199--201
 
  []
 
@@ -429,7 +429,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 198--200
 Here is how much of TeX's memory you used:
  4649 strings out of 492649
  66875 string characters out of 6129622
- 169644 words of memory out of 5000000
+ 168644 words of memory out of 5000000
  8425 multiletter control sequences out of 15000+600000
  19980 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -453,7 +453,7 @@ m-super/sfrm1200.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-
 super/sfrm1728.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-su
 per/sfti1000.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-supe
 r/sftt0800.pfb>
-Output written on fapra_paper.pdf (8 pages, 5206296 bytes).
+Output written on fapra_paper.pdf (8 pages, 5205576 bytes).
 PDF statistics:
  121 PDF objects out of 1000 (max. 8388607)
  80 compressed objects within 1 object stream
