@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  11 MAY 2020 09:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.25)  11 MAY 2020 14:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -398,20 +398,20 @@ Package pdftex.def Info: figures/input.png  used on input line 97.
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [3] [4 <./figures/input.png>]
-<figures/success.png, id=45, 1384.17125pt x 893.3375pt>
+<figures/success.png, id=46, 1384.17125pt x 893.3375pt>
 File: figures/success.png Graphic file (type png)
 <use figures/success.png>
-Package pdftex.def Info: figures/success.png  used on input line 167.
+Package pdftex.def Info: figures/success.png  used on input line 171.
 (pdftex.def)             Requested size: 373.73123pt x 241.20435pt.
-<figures/search.png, id=46, 403.5075pt x 534.99875pt>
+<figures/search.png, id=47, 403.5075pt x 534.99875pt>
 File: figures/search.png Graphic file (type png)
 <use figures/search.png>
-Package pdftex.def Info: figures/search.png  used on input line 173.
+Package pdftex.def Info: figures/search.png  used on input line 177.
 (pdftex.def)             Requested size: 161.40013pt x 213.9957pt.
-<figures/wide.png, id=47, 1512.65125pt x 886.31125pt>
+<figures/wide.png, id=48, 1512.65125pt x 886.31125pt>
 File: figures/wide.png Graphic file (type png)
 <use figures/wide.png>
-Package pdftex.def Info: figures/wide.png  used on input line 179.
+Package pdftex.def Info: figures/wide.png  used on input line 183.
 (pdftex.def)             Requested size: 347.90247pt x 203.84729pt.
 
 
@@ -421,37 +421,42 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [5 <./figures/success.png>] [6 <./figures/search.png> <./figures/wide.png>]
-(./fapra_paper.bbl) [7] (./fapra_paper.aux) ) 
+Underfull \hbox (badness 10000) in paragraph at lines 198--200
+
+ []
+
+(./fapra_paper.bbl [7]) [8] (./fapra_paper.aux) ) 
 Here is how much of TeX's memory you used:
- 4646 strings out of 492649
- 66837 string characters out of 6129622
- 167614 words of memory out of 5000000
- 8423 multiletter control sequences out of 15000+600000
- 19199 words of font info for 44 fonts, out of 8000000 for 9000
+ 4649 strings out of 492649
+ 66875 string characters out of 6129622
+ 169644 words of memory out of 5000000
+ 8425 multiletter control sequences out of 15000+600000
+ 19980 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,16n,25p,358b,393s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2018/texmf-dis
-t/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2018/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2018/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2018/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2018/texmf-dist/font
-s/type1/public/cm-super/sfbi1000.pfb></usr/local/texlive/2018/texmf-dist/fonts/
-type1/public/cm-super/sfbx0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/ty
-pe1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2018/texmf-dist/fonts/type
-1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/
-public/cm-super/sfbx1440.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/pu
-blic/cm-super/sfrm0600.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/publ
-ic/cm-super/sfrm0700.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public
-/cm-super/sfrm0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/c
-m-super/sfrm1000.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-
-super/sfrm1200.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-su
-per/sfrm1728.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-supe
-r/sfti1000.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/
-sftt0800.pfb>
-Output written on fapra_paper.pdf (7 pages, 5189425 bytes).
+ 41i,24n,42p,358b,615s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2018/texmf
+-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2018/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2018/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2018/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2018/texmf-dist/
+fonts/type1/public/cm-super/sfbi1000.pfb></usr/local/texlive/2018/texmf-dist/fo
+nts/type1/public/cm-super/sfbx0700.pfb></usr/local/texlive/2018/texmf-dist/font
+s/type1/public/cm-super/sfbx0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/
+type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2018/texmf-dist/fonts/ty
+pe1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2018/texmf-dist/fonts/type
+1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/
+public/cm-super/sfrm0600.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/pu
+blic/cm-super/sfrm0700.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/publ
+ic/cm-super/sfrm0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public
+/cm-super/sfrm1000.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/c
+m-super/sfrm1200.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-
+super/sfrm1728.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-su
+per/sfti1000.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-supe
+r/sftt0800.pfb>
+Output written on fapra_paper.pdf (8 pages, 5206296 bytes).
 PDF statistics:
- 114 PDF objects out of 1000 (max. 8388607)
- 75 compressed objects within 1 object stream
+ 121 PDF objects out of 1000 (max. 8388607)
+ 80 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  31 words of extra memory for PDF output out of 10000 (max. 10000000)
 

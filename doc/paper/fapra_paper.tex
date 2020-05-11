@@ -4,7 +4,7 @@
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[]{algorithm2e}
+\usepackage[ruled, linesnumbered]{algorithm2e}
 
 %% Sets page size and margins
 \usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
@@ -27,7 +27,7 @@ To ensure that such vehicles never run out of power, adaptions to navigation and
 This project explains the implementation of a route planner that considers the limited cruising range of electric vehicles, as well as the availability of charging stations in the road network, based on OpenStreetMap data. 
 \end{abstract}
 \section{Introduction}
-Climate change and its consequences heavily impacted the engineering of means of transport.
+Climate change and its consequences heavily impacted the engineering of alternative means of transport.
 As a result, vehicles powered by electric batteries emerged, such as electrically-powered cars, bikes or scooters.
 By using regenerative energy sources, electrically-powered vehicles have the potential to significantly reduce the dependency of fossil fuel reserves \cite{Artmeier2010}.
 Furthermore, electric vehicles emit no emissions and are therefore more eco-friendly than vehicles running on gasoline.
@@ -91,7 +91,7 @@ Hence, a charging station in our graph model contains coordinates, an enum indic
 To route between two nodes in our graph, we use Dijkstra's Shortest Path Algorithm \cite{Dijkstra1959}.
 The user is able to select between routing for shortest time or shortest distance, as visible in Figure \ref{fig:input}.
 \subsection{Routing for Electric Vehicles}
-The main functionality of this project is a route planner that considers the current and maximum range of electric vehicles, as well as charging stations to determine a route where an electric vehicle never runs out of battery.
+The main functionality of this project is a route planner that considers the current and maximum range of electric vehicles, as well as the availability of charging stations to determine a route where an electric vehicle never runs out of battery.
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.45]{figures/input}
@@ -100,12 +100,11 @@ The main functionality of this project is a route planner that considers the cur
 \end{figure}
 Figure \ref{fig:input} depicts the modal where the user can enter the current and maximum range of the electric vehicle used for travelling.
 Once a start and target location is chosen, the user can submit the request for route planning including the parameters of current and maximum range to the Backend.
-Initially, in the Backend, a shortest path calculation is started from start to target.
 The pseudo code depicted in Algorithm \ref{alg:route} simplifies the processing of the Backend once receiving such a request.\par\bigskip
 \begin{algorithm}[H]
  \KwData{start coordinates, target coordinates, current range, maximum range}
  \KwResult{route}
-naive route $\leftarrow$  shortest path(start coordinates, target coordinates)\;
+naive route $\leftarrow$  shortest path(start coordinates, goal coordinates)\;
 required range $\leftarrow$ route.distance\;
  \While{required range > current range}{
  charging station coordinates $\leftarrow$ find optimal charging station coordinates\;
@@ -115,10 +114,10 @@ required range $\leftarrow$ route.distance\;
  current range $\leftarrow$ maximum range\;
  start coordinates $\leftarrow$ charging station coordinates\;
  
- route to target $\leftarrow$ shortest path(start coordinates, target coordinates)\;
+ route to goal $\leftarrow$ shortest path(start coordinates, goal coordinates)\;
  required range $\leftarrow$ route to target.distance\;
  
-  \If{route to target.distance < current range}{
+  \If{required range < current range}{
     route $\leftarrow$ route + route to target\;
      \Return{route}
    }
@@ -127,46 +126,51 @@ required range $\leftarrow$ route.distance\;
  \caption{Simplified route calculation}
  \label{alg:route}
 \end{algorithm}\par\bigskip
-At first, we just calculate a shortest path based on start and target parameters, to check if the current range of our electric vehicle is sufficient.
-If it is not sufficient, we reset the route and calculate the optimal charging station coordinates based on the start and target location, as well as the current range and our means of transportation, i.e. car or bike.
+At first, we calculate the shortest path based on the start and goal parameters
+In line 3, we check if the distance of the shortest path surpasses our current range, i.e. if we need to charge our electric vehicle.
+If the current range is sufficient for the calculated shortest path, we jump to line 16 and return the route to the Frontend.
+If the current range is not sufficient, we need to visit a charging station.
+Hence, we start the calculation of a charging station based on the start, goal, the current and maximum range, as well as our means of transportation (car or bike).\par\medskip
 This calculation is depicted in Algorithm \ref{alg:charg}. 
-For this, we iterate over all charging stations and check as a pre-condition if the current charging station supports our means of transportation.
-If this is the case, we calculate the haversine distance to the current charging station from respectively the start and target location.
-Then, we check if the charging station is reachable from our start location with the current range, and compare both distances with the global minimum, respectively maximum. 
-Our goal is to calculate the charging station which is the farthest away from the start and the closest to the target, i.e. we want to utilize the current range as far as it is possible and get a charging station which is as close to the target location as the current range allows.
-Once we determined the charging station coordinates, we calculate the shortest path from the start location to the chosen charging station location.
-Then, we set our current range as maximum range, since we assume that we charged our electric vehicle fully.
-Then, we set the charging station location as new start and calculate the shortest path again from our new start to the target location.
-We update the required range to the distance to the target from the lastly used charging station.
-While the required range is still bigger than our current range, we calculate routes between charging stations based on start and target, until we are able to reach the target.
+After initializing variables we need later on, we start iterating over all charging stations in line 5.
+In line 6, we check if the current charging station supports our means of transportation.
+If this is the case, we need to determine whether the current charging station is within our current range, i.e. if the range of our electric vehicle is sufficient to reach the charging station.
 \par\bigskip
 \begin{algorithm}[H]
- \KwData{start coordinates, target coordinates, current range, transportation mode}
- \KwResult{chosen charging station}
-closest distance from start $\leftarrow$ 0\;
-closest distance from goal $\leftarrow$ max\;
- \For{charging station \textbf{in} charging stations}{
- \If{charging station \textbf{contains} transportation mode}{
- temp distance from start $\leftarrow$ distance(start coordinates, charging station)\;
- temp distance to goal $\leftarrow$ distance (goal coordinates, charging station)\;
- \If{temp distance from start < current range \textbf{And} temp distance from start > global distance from start \textbf{And} temp distance to goal < global distance to goal}{
-  global distance from start $\leftarrow$ temp distance from start\;
-  global distance to goal $\leftarrow$ temp distance to goal\;
-  chosen charging station coordinates $\leftarrow$ charging station
- }
- }
- }
- \Return{chosen charging station}
- \caption{Simplified charging station coordinates calculation}
- \label{alg:charg}
+	\KwData{start coordinates, target coordinates, current range, transportation mode}
+	\KwResult{chosen charging station}
+	
+	global min distance sum $\leftarrow$ max\;
+	chosen charging station $\leftarrow$ null\;
+	range utilization $\leftarrow$ 0.5\;
+	haversine distance multiplier $\leftarrow$ 1.5\;
+	\For{charging station \textbf{in} charging stations}{
+		\If{charging station.supported \textbf{contains} transportation mode}{
+			temp distance from start $\leftarrow$ distance(start coordinates, charging station)\;
+			\If{temp distance from start $\times$ haversine distance multiplier =< current range}{
+				\If{temp distance from start >= current range $\times$ range utilization treshold} {
+					temp distance to goal $\leftarrow$ distance (goal coordinates, charging station)\;
+					temp dist sum = temp distance from start + temp distance to goal\;
+					\If{temp dist sum < global min distance sum}{
+						global min distance sum $\leftarrow$ temp dist sum\;
+						chosen charging station $\leftarrow$ charging station\;
+					}
+				}
+			}
+		}
+	}
+	\Return{chosen charging station}
+	\caption{Simplified charging station coordinates calculation}
+	\label{alg:charg}
 \end{algorithm}\par\bigskip
-Figure \ref{fig:success} shows the Frontend with a successfully calculated route with charging stations.
-The visited charging stations are highlighted for the user. \\
+To do this, we need to calculate the distance from the start to the current charging station.
+Due to performance and efficiency, we do not calculate this distance via our shortest path algorithm, but with the haversine distance formula \cite{10.2307/2309088}, which determines the great-circle distance between two points on a sphere.
+Since the distance for a shortest path between two points on a road network is bigger than the haversine distance, we need to make sure that the current charging station is actually reachable with our current range considering the actual distance of a shortest path on a road network.
 \begin{figure}[h]
-    \centering
-    \includegraphics[scale=0.27]{figures/success}
-    \caption{Successfully calculation of route with charging stations}
-    \label{fig:success}
+	\centering
+	\includegraphics[scale=0.27]{figures/success}
+	\caption{Successfully calculation of route with charging stations}
+	\label{fig:success}
 \end{figure}
 \begin{figure}[h]
 	\centering
@@ -180,6 +184,19 @@ The visited charging stations are highlighted for the user. \\
 	\caption{Display all charging stations}
 	\label{fig:charging}
 \end{figure}
+Hence, we use a multiplier of 1.5 as a heuristic for the haversine distance between the start and the charing station when comparing it to our current range as seen in line 8.
+By using this value, we assume that the actual shortest path distance between two points on our road network is less or equal than $1.5$ times the haversine distance.
+If the distance to the charging station is within our current range, we check in line 9 if at least 50\% of our current range is utilized to avoid wasting our range.
+If at least 50\% of our range is utilized, we calculate the haversine distance from the current charging station to the goal.
+In line 11, we sum up the haversine distances from the start to the current charging station, and from the charging station to the goal, as we want to determine the charging station with the smallest total distance sum between start, charging station and goal.
+In line 12, we check if the sum is smaller than the current global minimum distance sum and if this is the case, we update the current global minimum distance sum and the best charging station accordingly as visible in line 12 and 13.\par\medskip
+Once we determined a charging station with Algorithm \ref{alg:charg}, we jump back to Algorithm \ref{alg:route} and calculate the shortest path from the start location to the chosen charging station location.
+Then, we set our current range as maximum range, since we assume that we fully charged our electric vehicle, and replace the original start with the charging station as depicted in line 8 and 9.
+Following, we calculate the shortest path from our new start to the target location, and update the required range accordingly.
+In line 11, we check if the required range is less or equal our current range, i.e. if the remaining distance does not require further charging, and if that is the case, we concatenate the calculated routes to one single route and return it in line 12 and 13.
+However, if the remaining distance is still bigger than our current range, we jump back to the start of the while loop in line 4 and repeat the procedure until the remaining distance is within our current range.\par\bigskip
+Figure \ref{fig:success} shows the Frontend with a successfully calculated route with charging stations.
+The visited charging stations are highlighted for the user. \\
 \subsection{Further Features}
 Another feature of the application is the use of the \textit{Nominatim}\footnote{\url{https://nominatim.openstreetmap.org}} API to allow the user to search for places, cities or Point-Of-Interests (POIs) as seen in Figure \ref{fig:search}.
 Furthermore, it is possible to show (or hide) all charging stations that exist, as seen in Figure \ref{fig:charging}.

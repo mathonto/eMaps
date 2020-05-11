@@ -18,6 +18,11 @@ M.~{Haklay} and P.~{Weber}.
 \newblock Openstreetmap: User-generated street maps.
 \newblock {\em IEEE Pervasive Computing}, 7(4):12--18, Oct 2008.
 
+\bibitem[Rob57]{10.2307/2309088}
+C.~C. Robusto.
+\newblock The cosine-haversine formula.
+\newblock {\em The American Mathematical Monthly}, 64(1):38--40, 1957.
+
 \bibitem[WKS12]{Worley2012}
 O.~{Worley}, D.~{Klabjan}, and T.~M. {Sweda}.
 \newblock Simultaneous vehicle routing and charging station siting for
