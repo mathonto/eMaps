@@ -144,13 +144,14 @@ impl<'a> Router<'a> {
             // check if charging station supports required charging mode
             if charging_node.charging_options.contains(required_charging) {
                 let dist_from_start = actual_start.distance(&charging_node.coordinates);
-                let dist_to_goal = actual_goal.distance(&charging_node.coordinates);
-                let dist_sum = dist_from_start + dist_to_goal;
+
 
                 // assumption: dijkstra route distance is not bigger than 1,25 * haversine distance
                 if f64::from(dist_from_start) * 1.35 <= f64::from(current_range) {
                     // we want to utilize at least 50% of current range
                     if f64::from(dist_from_start) >= (f64::from(current_range) * 0.5) {
+                        let dist_to_goal = actual_goal.distance(&charging_node.coordinates);
+                        let dist_sum = dist_from_start + dist_to_goal;
                         if f64::from(dist_sum) < f64::from(global_dist_sum) {
                             global_dist_sum = dist_sum;
                             charging_coords = &charging_node.coordinates;
