@@ -67,7 +67,7 @@ Handle request for all charging stations.
 fn charging_stations(state: Data<Graph>) -> Result<HttpResponse> {
     debug!("Getting charging stations...");
     let all_charging_stations = Graph::get_charging_stations(state.get_ref());
-    println!("{}", all_charging_stations.len());
+    debug!("Found {} charging stations", all_charging_stations.len());
     let resp = ChargingResponse::from(all_charging_stations);
     Ok(HttpResponse::Ok().json(resp))
 }

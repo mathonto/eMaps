@@ -213,6 +213,7 @@ impl<'a> Pbf<'a> {
         for i in 1..offsets.len() {
             offsets[i] += offsets[i - 1]
         }
+
         Graph::new(nodes, offsets, edges, charging_nodes)
     }
 

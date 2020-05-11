@@ -87,7 +87,10 @@ impl Graph {
         let reader = BufReader::new(file);
         // deserialize graph from bin file
         let graph: Self = bincode::deserialize_from(reader).unwrap();
-        debug!("Read graph from {}...", filename);
+        debug!("Parsed {} nodes", graph.nodes.len());
+        debug!("Parsed {} edges", graph.edges.len());
+        debug!("Parsed {} charging stations", graph.charging_nodes.len());
+        debug!("Finished reading graph from {}...", filename);
         graph
     }
 
