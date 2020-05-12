@@ -4,6 +4,8 @@
 
 # eMaps
 
+Routing planner for electrically-powered vehicles, such as eCars or eBikes, based on OpenStreetMap data.
+
 ## Documentation
 Visit the [doc](doc) folder for further documentation, i.e. a presentation and a paper about this project.
 
