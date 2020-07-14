@@ -120,7 +120,6 @@ impl<'a> Pbf<'a> {
                     .or_else(|| highway.unwrap().default_speed()).unwrap();
                 let is_oneway = is_oneway(&way);
 
-                // get all nodes of ways
                 self.insert_node_id(*way.nodes.get(0).unwrap());
                 for i in 1..way.nodes.len() {
                     let source_id = *way.nodes.get(i - 1).unwrap();

@@ -182,12 +182,13 @@ fn shortest_path(state: Data<Graph>, request: Json<Request>) -> Result<HttpRespo
                         result_path.push(entry);
                     }
                 }
-
                 // create new final route
                 let route = Route::new(result_path, final_time, final_distance, Option::from(visited_charging_coords));
+                debug!("Path found, calculation took {}ms", now.elapsed().as_millis());
                 Ok(HttpResponse::Ok().json(Response::from(&route)))
             } else {
                 let route = Route::new(rt.path, rt.time, rt.distance, None);
+                debug!("Path found, calculation took {}ms", now.elapsed().as_millis());
                 Ok(HttpResponse::Ok().json(Response::from(&route)))
             }
         }
